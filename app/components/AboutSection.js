@@ -1,5 +1,3 @@
-"use client"
-
 export default function AboutSection() {
   return (
     <section className="relative py-24 bg-[var(--white)]" id="o-nas">
@@ -46,7 +44,7 @@ function AboutImage() {
     <div className="relative">
       <div className="relative overflow-hidden shadow-2xl">
         <img 
-          src="/680A0006.jpg" 
+          src="/680A0006.webp" 
           alt="Wnętrze restauracji Royal" 
           className="w-full h-[500px] md:h-[600px] object-cover object-top"
         />
@@ -56,7 +54,7 @@ function AboutImage() {
       {/* Ikonka - prawy górny róg obrazka */}
       <div className="absolute -top-10 -right-50 w-100 pointer-events-none opacity-11" style={{transform: 'rotate(-90deg)', zIndex: -1}}>
         <img 
-          src="/5.png" 
+          src="/5.webp" 
           alt="" 
           className="w-full h-full object-contain"
         />

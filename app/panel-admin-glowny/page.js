@@ -172,33 +172,6 @@ export default function AdminDashboard() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
 
 
-          <div className="bg-[#111111] border border-gray-800 rounded-xl p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-xs tracking-wider mb-1">POZYCJE MENU</p>
-                <p className="text-2xl text-white font-light">48</p>
-              </div>
-              <div className="w-10 h-10 bg-[#b08d8d]/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#b08d8d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#111111] border border-gray-800 rounded-xl p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-xs tracking-wider mb-1">WIADOMOŚCI</p>
-                <p className="text-2xl text-white font-light">3</p>
-              </div>
-              <div className="w-10 h-10 bg-[#b08d8d]/10 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#b08d8d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
     </div>

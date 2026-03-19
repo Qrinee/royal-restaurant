@@ -1,13 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
-
 export default function Footer() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="relative bg-[#1a1a1a] text-white pt-16 pb-8">
@@ -176,7 +168,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-          <p>© {mounted ? new Date().getFullYear() : '2025'} Royal Restaurant. Wszystkie prawa zastrzeżone.</p>
+          <p>© {currentYear} Royal Restaurant. Wszystkie prawa zastrzeżone.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Polityka prywatności</a>
             <a href="#" className="hover:text-white transition-colors">Regulamin</a>

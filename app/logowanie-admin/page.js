@@ -72,15 +72,6 @@ export default function AdminLogin() {
           <p className="text-gray-500 text-sm mt-2">Zaloguj się aby zarządzać restauracją</p>
         </div>
 
-        <div className="mb-6">
-          <button
-            type="button"
-            onClick={() => window.location.href = '/panel-admin-glowny?demo=true'}
-            className="w-full py-3 px-4 bg-yellow-600/20 border border-yellow-600/50 text-yellow-400 rounded-xl hover:bg-yellow-600/30 transition-colors text-sm font-medium"
-          >
-            Wejdź w trybie demo
-          </button>
-        </div>
 
         <form onSubmit={handleSubmit} className="bg-[#111111] border border-gray-800 rounded-2xl p-8 shadow-2xl">
           {error && (

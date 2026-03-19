@@ -109,7 +109,7 @@ export default function EventsSection() {
           <div className="relative order-1 lg:order-2">
             <div className="relative overflow-hidden shadow-2xl">
               <img 
-                src="/680A9843-Edit.jpg" 
+                src="/680A9843-Edit.webp" 
                 alt="Eventy w Royal Restaurant" 
                 className="w-full h-[500px] md:h-[600px] object-cover object-top"
               />

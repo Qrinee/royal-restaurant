@@ -55,7 +55,7 @@ export default function Home() {
             {/* Logo */}
             <div className="flex justify-center">
               <Link href="/">
-                <img src="/logo.png" alt="Royal Restaurant" className="h-8 md:h-10" style={{width: '80px'}} />
+                <img src="/logo.webp" alt="Royal Restaurant" className="h-8 md:h-10" style={{width: '80px'}} />
               </Link>
             </div>
 
@@ -173,7 +173,8 @@ export default function Home() {
                     {/* Large Main Image - Spans 4x4 */}
                     <div className="col-span-6 row-span-4 relative   overflow-hidden shadow-2xl group cursor-pointer">
                       <img 
-                        src="/680A9843-Edit.jpg" 
+                        src="/680A9843-Edit.webp" 
+                        fetchPriority='high'
                         alt="Restaurant Interior" 
                         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                       />
@@ -186,7 +187,7 @@ export default function Home() {
                     {/* Small Square 1 - Spans 2x2 */}
                     <div className="col-span-2 row-span-2 relative  overflow-hidden shadow-lg group cursor-pointer">
                       <img 
-                        src="/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.png" 
+                        src="/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp" 
                         alt="Dish" 
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
