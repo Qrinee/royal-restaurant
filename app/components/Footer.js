@@ -21,20 +21,17 @@ export default function Footer() {
           {/* Logo & Description */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-[var(--accent)] flex items-center justify-center">
-                <span className="text-white font-serif text-lg">R</span>
-              </div>
               <div>
                 <h3 className="text-lg tracking-[0.15em] font-medium">ROYAL</h3>
                 <p className="text-xs tracking-widest text-white/50">RESTAURANT</p>
               </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
-              Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka się z nowoczesną elegancją. Serwujemy od 2010 roku.
+              Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka się z nowoczesną elegancją. 
             </p>
             <div className="flex gap-4">
               <a 
-                href="#" 
+                href="https://www.facebook.com/RoyalRestaurantWarsaw/" 
                 className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-[var(--accent)] hover:border-[var(--accent)] transition-all duration-300"
                 aria-label="Facebook"
               >
@@ -43,7 +40,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a 
-                href="#" 
+                href="https://www.instagram.com/royalrestaurant_warsaw" 
                 className="w-10 h-10 border border-white/20 flex items-center justify-center hover:bg-[var(--accent)] hover:border-[var(--accent)] transition-all duration-300"
                 aria-label="Instagram"
               >
@@ -85,7 +82,7 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-white/90 text-sm">ul. Kwiatowa 12</p>
+                  <p className="text-white/90 text-sm">Marszałkowska 138</p>
                   <p className="text-white/60 text-sm">00-001 Warszawa</p>
                 </div>
               </div>
