@@ -86,7 +86,7 @@ export default function Home() {
             {/* Desktop menu - right */}
             <div className="hidden md:flex items-center gap-6 text-xs tracking-[0.15em] absolute right-0">
               <Link href="#eventy" className="hover:text-[var(--accent)] transition-colors">EVENTY</Link>
-              <Link href="#rezerwacja" className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]">
+              <Link href="https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw" className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]">
                 REZERWACJA
               </Link>
             </div>
@@ -185,9 +185,9 @@ export default function Home() {
                     <span className="relative z-10 text-center flex justify-center">ZOBACZ MENU</span>
                     <div className="absolute inset-0 bg-[var(--accent)] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                   </Link>
-                  <button className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300">
+                  <a href='https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw' className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300">
                     ZAREZERWUJ
-                  </button>
+                  </a>
                 </div>
               </div>
 
