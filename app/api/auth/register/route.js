@@ -12,7 +12,6 @@ export async function POST(request) {
     const body = await request.json();
     const { username, password } = body;
 
-    // Validate input
     if (!username || !password) {
       return NextResponse.json(
         { success: false, error: 'Username and password are required' },
@@ -20,7 +19,6 @@ export async function POST(request) {
       );
     }
 
-    // Check password minimum length
     if (password.length < 6) {
       return NextResponse.json(
         { success: false, error: 'Password must be at least 6 characters' },
@@ -28,7 +26,6 @@ export async function POST(request) {
       );
     }
 
-    // Check if user already exists
     const existingUser = await findUserByUsername(username);
     if (existingUser) {
       return NextResponse.json(
@@ -37,13 +34,10 @@ export async function POST(request) {
       );
     }
 
-    // Create user in MongoDB
     const newUser = await createUser(username, password, 'admin');
 
-    // Generate JWT token (async version for compatibility)
     const token = await generateTokenAsync(newUser);
 
-    // Create response
     const response = NextResponse.json({
       success: true,
       user: {
@@ -52,7 +46,6 @@ export async function POST(request) {
       }
     });
 
-    // Set HTTP-only cookie
     response.cookies.set(COOKIE_NAME, token, getCookieOptions());
 
     return response;

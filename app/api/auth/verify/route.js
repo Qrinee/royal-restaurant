@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyTokenAsync, getTokenFromCookies, COOKIE_NAME } from '@/lib/auth';
+import { verifyTokenAsync, getTokenFromCookies } from '@/lib/auth';
 
 export async function GET(request) {
   try {

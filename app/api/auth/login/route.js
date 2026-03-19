@@ -7,7 +7,6 @@ export async function POST(request) {
     const body = await request.json();
     const { username, password } = body;
 
-    // Validate input
     if (!username || !password) {
       return NextResponse.json(
         { success: false, error: 'Username and password are required' },
@@ -15,7 +14,6 @@ export async function POST(request) {
       );
     }
 
-    // Try MongoDB authentication first, then fallback to env-based auth
     let user = null;
     try {
       user = await validateCredentials(username, password);

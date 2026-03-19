@@ -4,18 +4,11 @@ import { validateCredentials } from '@/lib/models/user';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-/**
- * NextAuth-compatible API route
- * Provides session management using our custom JWT implementation
- * Works with or without MongoDB
- */
-
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action');
 
   if (action === 'session') {
-    // Return current session info
     const token = verifyToken(request.cookies.get(COOKIE_NAME)?.value);
     
     if (!token) {
@@ -40,7 +33,6 @@ export async function POST(request) {
     const { action, username, password } = body;
 
     if (action === 'signin') {
-      // Authenticate user
       if (!username || !password) {
         return NextResponse.json(
           { error: 'Username and password are required' },
@@ -55,32 +47,6 @@ export async function POST(request) {
         user = await validateCredentials(username, password);
       } catch (e) {
         console.log('Auth error, trying env-based fallback:', e.message);
-        
-        // Fallback to environment-based authentication
-        // Both ADMIN_USERNAME and ADMIN_PASSWORD_HASH must be set
-        const adminUsername = process.env.ADMIN_USERNAME;
-        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
-        
-        if (!adminUsername || !adminPasswordHash) {
-          console.warn('Environment-based auth not configured');
-        } else if (username === adminUsername) {
-          // Use bcrypt comparison for env hash
-          try {
-            if (await bcrypt.compare(password, adminPasswordHash)) {
-              user = { username: adminUsername, role: 'admin' };
-            }
-          } catch {
-            // If env hash is not bcrypt format, try legacy SHA-256 comparison
-            const inputHash = crypto
-              .createHash('sha256')
-              .update(password)
-              .digest('hex');
-            
-            if (inputHash === adminPasswordHash) {
-              user = { username: adminUsername, role: 'admin' };
-            }
-          }
-        }
       }
 
       if (!user) {
@@ -89,8 +55,6 @@ export async function POST(request) {
           { status: 401 }
         );
       }
-
-      // Generate token
       const token = generateToken(user);
 
       const response = NextResponse.json({
@@ -101,7 +65,6 @@ export async function POST(request) {
         }
       });
 
-      // Set HTTP-only cookie
       response.cookies.set(COOKIE_NAME, token, getCookieOptions());
 
       return response;

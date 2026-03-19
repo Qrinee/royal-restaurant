@@ -8,7 +8,6 @@ export async function POST(request) {
       message: 'Logged out successfully'
     });
 
-    // Clear the session cookie
     response.cookies.set(COOKIE_NAME, '', getClearCookieOptions());
 
     return response;
