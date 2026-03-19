@@ -1,6 +1,6 @@
 "use client"
 import './globals.css'
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import MenuSection from "./components/MenuSection"
 import InstagramSection from './components/InstagramSection'
@@ -12,20 +12,44 @@ export default function Home() {
   const [mobileMenuOpen,setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
+  // Obsługa scroll - zoptymalizowana
+  const handleScroll = useCallback(() => {
+    setScrolled(window.scrollY > 50)
+  }, [])
+
+  // Ukrycie linku w widgetach Elfsight (tylko raz po zamontowaniu)
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+    const hideElfsightLinks = () => {
+      // Szukamy linków w widgetach Google Reviews
+      const elfsightLinks = document.querySelectorAll('.eapps-google-reviews-f2b5c943-5ddf-4d51-b347-de8723102d4f a')
+      elfsightLinks.forEach(link => {
+        if (link.textContent?.includes('Google') || link.textContent?.includes('Reviews')) {
+          link.style.display = 'none'
+        }
+      })
     }
+    
+    // Wykonaj od razu
+    hideElfsightLinks()
+    
+    // I po załadowaniu widgetu
+    const observer = new MutationObserver(hideElfsightLinks)
+    observer.observe(document.body, { childList: true, subtree: true })
+    
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [handleScroll])
 
   return (
     <>
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 flex flex-col">
         {/* SUBTLE BACKGROUND PATTERN */}
-        <div className="absolute inset-0 pointer-events-none opacity-15">
-          <div className="absolute inset-0" style={{
+        <div className="inset-0 pointer-events-none opacity-15">
+          <div className="inset-0" style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, var(--secondary) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }}></div>
@@ -62,7 +86,6 @@ export default function Home() {
             {/* Desktop menu - right */}
             <div className="hidden md:flex items-center gap-6 text-xs tracking-[0.15em] absolute right-0">
               <Link href="#eventy" className="hover:text-[var(--accent)] transition-colors">EVENTY</Link>
-              <Link href="#kontakt" className="hover:text-[var(--accent)] transition-colors">KONTAKT</Link>
               <Link href="#rezerwacja" className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]">
                 REZERWACJA
               </Link>
@@ -83,8 +106,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* HERO SECTION - Ultra 2026 Best Restaurant Design */}
-        <section className="relative flex items-center min-h-[calc(100vh-80px)]">
+        {/* HERO SECTION */}
+        <section className="relative flex items-center min-h-[calc(100vh-80px)] overflow-hidden">
           {/* Tekstura tła - siatka */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -113,10 +136,11 @@ export default function Home() {
             backgroundSize: '20px 20px'
           }}></div>
 
-          {/* Ambient Glows */}
+          {/* Ambient Glows - ograniczone do sekcji */}
           <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[var(--accent)]/5 rounded-full blur-[180px] pointer-events-none"></div>
           <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[var(--secondary)]/10 rounded-full blur-[150px] pointer-events-none"></div>
 
+          {/* Główna treść sekcji */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 py-8 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               
@@ -147,10 +171,13 @@ export default function Home() {
                 </div>
 
                 {/* Description - Elegant */}
-                <p className="animate-fade-up text-lg md:text-xl text-[var(--foreground-secondary)] max-w-lg mb-10 leading-relaxed" style={{animationDelay: '0.2s'}}>
+                <p className="animate-fade-up text-lg md:text-xl text-[var(--foreground-secondary)] max-w-lg mb-6 leading-relaxed" style={{animationDelay: '0.2s'}}>
                   Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00,
                   a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania
                 </p>
+
+                {/* Pyszne.pl info */}
+
 
                 {/* CTAs */}
                 <div className="animate-fade-up flex flex-col sm:flex-row gap-4 mb-12" style={{animationDelay: '0.25s'}}>
@@ -222,7 +249,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Floating decorative circles */}
+                  {/* Floating decorative circles - ograniczone do kontenera */}
                   <div className="absolute -top-8 -right-8 w-24 h-24 border border-[var(--accent)]/20 rounded-full pointer-events-none"></div>
                   <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-[var(--secondary)]/20 rounded-full blur-xl pointer-events-none"></div>
                 </div>
@@ -231,7 +258,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Minimal Scroll Indicator */}
+          {/* Scroll Indicator - wewnątrz sekcji */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
             <span className="text-[10px] tracking-[0.2em] text-[var(--foreground-muted)]">PRZEWIŃ</span>
             <div className="w-5 h-8 border border-[var(--secondary)] rounded-full flex justify-center pt-1.5">
@@ -242,8 +269,55 @@ export default function Home() {
 
         <AboutSection />
 
-        <EventsSection />
 
+        {/* OPINIE SECTION - z tłem jak Hero */}
+        <section className="relative py-20 bg-[var(--white)]">
+          {/* Tło jak w Hero - siatka */}
+          <div className="absolute inset-0 pointer-events-none opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                linear-gradient(rgba(176, 141, 141, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(176, 141, 141, 0.12) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }}></div>
+          </div>
+
+          {/* Tekstura diagonalnych linii */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 10px,
+              var(--accent) 10px,
+              var(--accent) 11px
+            )`
+          }}></div>
+
+          {/* Ambient Glows */}
+          <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[150px] pointer-events-none"></div>
+          <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-[var(--secondary)]/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+          {/* Treść sekcji */}
+          <div className="relative z-10  mx-auto px-6">
+       <div className="text-center">
+          <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
+            Naszych gości
+          </span>
+          <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" >
+            OPINIE
+          </h2>
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <div className="w-16 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
+            <div className="w-2 h-2 rotate-45 bg-[var(--accent)]"></div>
+            <div className="w-16 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
+          </div>
+        </div>
+<iframe id="reviews-iframe" src={"https://f2b5c9435ddf4d51b347de8723102d4f.elf.site"} style={{border: 'none', width: '100%', minHeight: '600px', marginTop: '30px'}}></iframe>
+   
+          </div>
+        </section>
+      <EventsSection />
         <InstagramSection/>
       </main>
 

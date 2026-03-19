@@ -1,6 +1,6 @@
 export default function AboutSection() {
   return (
-    <section className="relative py-24 bg-[var(--white)]" id="o-nas">
+    <section className="relative py-24 bg-[var(--white)] overflow-hidden" id="o-nas">
       {/* Subtelne tło */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="absolute inset-0" style={{
@@ -9,9 +9,11 @@ export default function AboutSection() {
         }}></div>
       </div>
 
+      {/* Ambient glows - ograniczone do sekcji */}
       <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[150px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-[var(--secondary)]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
+      {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">

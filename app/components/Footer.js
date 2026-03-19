@@ -2,7 +2,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-[#1a1a1a] text-white pt-16 pb-8">
+    <footer className="relative bg-[#1a1a1a] text-white pt-16 pb-8 overflow-hidden">
       {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent"></div>
       
@@ -14,6 +14,7 @@ export default function Footer() {
         }}></div>
       </div>
 
+      {/* Główna treść stopki */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Main footer content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -70,6 +71,35 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Pyszne.pl */}
+          <div>
+            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">ZAMÓW ONLINE</h4>
+            <a 
+              href="https://www.pyszne.pl/en/menu/royal-restaurant-warszawa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group"
+            >
+              <div className="bg-white/5 p-4 rounded-sm border border-white/10 group-hover:border-orange-500/50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-orange-500 rounded-sm flex items-center justify-center">
+                    <img src="/channels4_profile.webp" alt="Pyszne.pl" className="w-full h-full " />
+                  </div>
+                  <div>
+                    <p className="text-white/90 font-medium">Zamów przez Pyszne.pl</p>
+                    <p className="text-white/50 text-xs">Szybko i wygodnie</p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-white/60 text-xs group-hover:text-orange-400 transition-colors">Zamów online</span>
+                  <svg className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </div>
+
           {/* Contact */}
           <div>
             <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">KONTAKT</h4>
@@ -98,62 +128,11 @@ export default function Footer() {
                   </a>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                  </svg>
-                </div>
-                <div>
-                  <a href="mailto:kontakt@royalrestaurant.pl" className="text-white/90 text-sm hover:text-[var(--accent)] transition-colors">
-                    kontakt@royalrestaurant.pl
-                  </a>
-                </div>
-              </div>
+
             </div>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">NAWIGACJA</h4>
-            <ul className="space-y-3">
-              <li>
-                <a href="#" className="text-white/70 text-sm hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[var(--accent)] rounded-full"></span>
-                  Strona główna
-                </a>
-              </li>
-              <li>
-                <a href="#menu" className="text-white/70 text-sm hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[var(--accent)] rounded-full"></span>
-                  Menu
-                </a>
-              </li>
-              <li>
-                <a href="#o-nas" className="text-white/70 text-sm hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[var(--accent)] rounded-full"></span>
-                  O nas
-                </a>
-              </li>
-              <li>
-                <a href="#galeria" className="text-white/70 text-sm hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[var(--accent)] rounded-full"></span>
-                  Galeria
-                </a>
-              </li>
-              <li>
-                <a href="#kontakt" className="text-white/70 text-sm hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[var(--accent)] rounded-full"></span>
-                  Kontakt
-                </a>
-              </li>
-              <li>
-                <a href="/logowanie-admin" className="text-white/40 text-xs hover:text-white/70 transition-colors">
-                  Admin
-                </a>
-              </li>
-            </ul>
-          </div>
+ 
         </div>
 
         {/* Decorative line */}
@@ -164,12 +143,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-          <p>© {currentYear} Royal Restaurant. Wszystkie prawa zastrzeżone.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Polityka prywatności</a>
-            <a href="#" className="hover:text-white transition-colors">Regulamin</a>
-          </div>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40 ">
+          <p className="text-center w-full">© {currentYear} Royal Restaurant. Wszystkie prawa zastrzeżone.</p>
         </div>
       </div>
     </footer>

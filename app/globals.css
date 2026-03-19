@@ -143,3 +143,19 @@ html {
   color: var(--white);
 }
 
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+body > div.elfsight-app-f2b5c943-5ddf-4d51-b347-de8723102d4f.eapps-widget.eapps-widget-show-toolbar > div.EmbedRoot__Root-sc-67f2186e-0.cqAxeQ.es-embed-root.eapps-google-reviews-f2b5c943-5ddf-4d51-b347-de8723102d4f-custom-css-root > div > div > div > div.WidgetBackground__Content-sc-386b5057-2.cMTovS.es-widget-background-content.WidgetBackground__ContentContainer-sc > a{
+  display: none !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  
+}

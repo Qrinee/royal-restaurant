@@ -20,7 +20,7 @@ export default function InstagramSection() {
     ]
 
   return (
-    <section className="relative py-12 md:py-24 bg-pink-100">
+    <section className="relative py-12 md:py-24 bg-pink-100 overflow-hidden">
       {/* Tekstura tła */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="absolute inset-0" style={{
@@ -29,9 +29,11 @@ export default function InstagramSection() {
         }}></div>
       </div>
       
+      {/* Ambient glows - ograniczone do sekcji */}
       <div className="absolute top-1/4 left-0 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-[var(--accent)]/5 rounded-full blur-[80px] md:blur-[150px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[150px] md:w-[300px] h-[150px] md:h-[300px] bg-[var(--secondary)]/10 rounded-full blur-[60px] md:blur-[120px] pointer-events-none"></div>
 
+      {/* Główna treść sekcji */}
       <div className="relative z-10">
         <div className="text-center mb-8 md:mb-16 px-4">
           <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">

@@ -45,14 +45,12 @@ export default function MenuPage() {
           {/* Logo - Clickable to home */}
           <div className="flex justify-center">
             <Link href="/">
-              <img src="/logo.png" alt="Royal Restaurant" className="h-8 md:h-10" style={{width: '80px'}} />
+              <img src="/logo.webp" alt="Royal Restaurant" className="h-8 md:h-10" style={{width: '80px'}} />
             </Link>
           </div>
 
           {/* Desktop menu - right */}
           <div className="hidden md:flex items-center gap-6 text-xs tracking-[0.15em] absolute right-0">
-            <Link href="/#wina" className="hover:text-[var(--accent)] transition-colors">WINE</Link>
-            <Link href="/#kontakt" className="hover:text-[var(--accent)] transition-colors">KONTAKT</Link>
             <Link href="/#rezerwacja" className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]">
               REZERWACJA
             </Link>
@@ -86,10 +84,10 @@ export default function MenuPage() {
             <div className="absolute inset-0 opacity-[0.03]" style={{
               backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, var(--accent) 20px, var(--accent) 21px)`
             }}></div>
-            <img src="/5.png" alt="" className="absolute top-10 left-[5%] w-20 h-20 opacity-8 rotate-12" style={{filter: 'blur(0.5px)'}} />
-            <img src="/5.png" alt="" className="absolute top-40 right-[10%] w-28 h-28 opacity-8 -rotate-12" style={{filter: 'blur(0.5px)'}} />
-            <img src="/5.png" alt="" className="absolute bottom-40 left-[15%] w-24 h-24 opacity-8 rotate-45" style={{filter: 'blur(0.5px)'}} />
-            <img src="/5.png" alt="" className="absolute bottom-20 right-[20%] w-20 h-20 opacity-8 -rotate-6" style={{filter: 'blur(0.5px)'}} />
+            <img src="/5.webp" alt="" className="absolute top-10 left-[5%] w-20 h-20 opacity-8 rotate-12" style={{filter: 'blur(0.5px)'}} />
+            <img src="/5.webp" alt="" className="absolute top-40 right-[10%] w-28 h-28 opacity-8 -rotate-12" style={{filter: 'blur(0.5px)'}} />
+            <img src="/5.webp" alt="" className="absolute bottom-40 left-[15%] w-24 h-24 opacity-8 rotate-45" style={{filter: 'blur(0.5px)'}} />
+            <img src="/5.webp" alt="" className="absolute bottom-20 right-[20%] w-20 h-20 opacity-8 -rotate-6" style={{filter: 'blur(0.5px)'}} />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6">

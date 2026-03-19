@@ -15,7 +15,7 @@ export default function EventsSection() {
   }
 
   return (
-    <section id="eventy" className="relative py-24 bg-[var(--background)]">
+    <section id="eventy" className="relative py-24 bg-[var(--background)] overflow-hidden">
       {/* Subtelne tło */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="absolute inset-0" style={{
@@ -24,9 +24,11 @@ export default function EventsSection() {
         }}></div>
       </div>
 
+      {/* Ambient glows - ograniczone do sekcji */}
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-[var(--accent)]/5 rounded-full blur-[150px] pointer-events-none"></div>
       <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-[var(--secondary)]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
+      {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
