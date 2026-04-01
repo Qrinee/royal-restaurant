@@ -20,7 +20,7 @@ export default function InstagramSection() {
     ]
 
   return (
-    <section className="relative py-12 md:py-24 bg-pink-100 overflow-hidden">
+    <section className="relative py-12 md:py-24 bg-white overflow-hidden">
       {/* Tekstura tła */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="absolute inset-0" style={{

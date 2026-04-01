@@ -118,16 +118,9 @@ export default function EventsSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
             </div>
             
-            {/* Dekoracje */}
-            <div className="absolute -top-10 -left-50 w-100 pointer-events-none opacity-15" style={{ zIndex: -1}}>
-              <img 
-                src="/7.webp" 
-                alt="" 
-                className="w-full h-full object-contain"
-              />
-            </div>
+
             
-            <div className="absolute -top-4 -right-4 w-24 h-24 border border-[var(--accent)]/30 pointer-events-none"></div>
+            <img src="/6.webp" alt="Decor" className="absolute -top-13 -right-13 w-34 h-34 object-cover  pointer-events-none" />
             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[var(--secondary)]/20 rounded-full blur-xl pointer-events-none"></div>
             
             <div className="absolute bottom-8 right-[-20px] bg-[var(--white)] shadow-lg p-4">

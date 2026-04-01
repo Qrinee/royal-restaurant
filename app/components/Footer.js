@@ -1,5 +1,34 @@
-export default function Footer() {
+"use client"
+
+import { useState, useEffect } from "react"
+
+export default function Footer({ content }) {
+  const [footerContent, setFooterContent] = useState(content)
   const currentYear = new Date().getFullYear()
+
+  useEffect(() => {
+    if (content) {
+      setFooterContent(content)
+    }
+    async function fetchFooter() {
+      try {
+        const res = await fetch('/api/site-content?type=settings')
+        const data = await res.json()
+        if (data.success && data.content) {
+          setFooterContent(data.content)
+        }
+      } catch (e) {
+        console.error('Błąd pobierania stopki:', e)
+      }
+    }
+    if (!content) {
+      fetchFooter()
+    }
+  }, [content])
+
+  const address = footerContent?.address || 'Marszałkowska 138, 00-001 Warszawa'
+  const phone = footerContent?.phone || '+48 696 566 633'
+  const restaurantName = footerContent?.restaurantName || 'Royal Restaurant'
 
   return (
     <footer className="relative bg-[#1a1a1a] text-white pt-16 pb-8 overflow-hidden">
@@ -28,7 +57,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
-              Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka się z nowoczesną elegancją. 
+              Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka domową atmosferę.
             </p>
             <div className="flex gap-4">
               <a 
@@ -112,8 +141,8 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-white/90 text-sm">Marszałkowska 138</p>
-                  <p className="text-white/60 text-sm">00-001 Warszawa</p>
+                  <p className="text-white/90 text-sm">{address.split(',')[0]}</p>
+                  <p className="text-white/60 text-sm">{address.split(',')[1] || address}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -123,8 +152,8 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <a href="tel:+48696566633" className="text-white/90 text-sm hover:text-[var(--accent)] transition-colors">
-                    +48 696 566 633
+                  <a href={`tel:${phone}`} className="text-white/90 text-sm hover:text-[var(--accent)] transition-colors">
+                    {phone}
                   </a>
                 </div>
               </div>
@@ -144,7 +173,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40 ">
-          <p className="text-center w-full">© {currentYear} Royal Restaurant. Wszystkie prawa zastrzeżone.</p>
+          <p className="text-center w-full">{footerContent?.description || `© ${currentYear} Royal Restaurant. Wszystkie prawa zastrzeżone.`}</p>
         </div>
       </div>
     </footer>

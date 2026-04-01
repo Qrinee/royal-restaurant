@@ -6,26 +6,13 @@ import { useRouter } from 'next/navigation';
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [demoMode, setDemoMode] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Check URL for demo mode
-    const urlParams = new URLSearchParams(window.location.search);
-    const isDemo = urlParams.get('demo') === 'true';
-    
-    if (isDemo) {
-      setDemoMode(true);
-      setUser({ username: 'demo' });
-      setLoading(false);
-      return;
-    }
-
     // Check if user is logged in - the middleware handles protection
     // Just verify we have a valid session
     const checkAuth = async () => {
       try {
-        // Try to fetch a protected resource to verify session
         const response = await fetch('/api/auth/verify', {
           method: 'GET',
           credentials: 'include'
@@ -48,10 +35,6 @@ export default function AdminDashboard() {
   }, [router]);
 
   const handleLogout = async () => {
-    if (demoMode) {
-      router.push('/logowanie-admin');
-      return;
-    }
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -73,6 +56,16 @@ export default function AdminDashboard() {
   }
 
   const menuItems = [
+    {
+      title: 'Zarządzanie Treścią',
+      description: 'Edycja tekstów na stronie (Hero, O nas, Stopka)',
+      href: '/zarzadzanie-trescia',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2l3.293-3.293a2 2 0 012.828-2.828z" />
+        </svg>
+      ),
+    },
     {
       title: 'Zarządzanie Menu',
       description: 'Dodawanie, edycja i usuwanie pozycji menu',
@@ -116,17 +109,12 @@ export default function AdminDashboard() {
           </div>
           
           <div className="flex items-center gap-4">
-            {demoMode && (
-              <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full">
-                TRYBIK DEMO
-              </span>
-            )}
             <span className="text-gray-400 text-sm">{user?.username}</span>
             <button
               onClick={handleLogout}
               className="px-4 py-2 border border-gray-700 text-gray-300 text-sm rounded-lg hover:bg-gray-800 hover:border-gray-600 transition-colors"
             >
-              {demoMode ? 'Wyjdź z demo' : 'Wyloguj'}
+
             </button>
           </div>
         </div>

@@ -15,18 +15,19 @@ export default function AboutSection() {
 
       {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            Poznaj nas
-          </span>
-          <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
+          <h2 className="text-4xl text-center md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
             O NAS
           </h2>
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="w-16 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
-            <div className="w-2 h-2 rotate-45 bg-[var(--accent)]"></div>
-            <div className="w-16 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
-          </div>
+        <div className="text-center mb-16">
+   
+
+          <svg className="mx-auto block w-[150px] h-3 mb-2" viewBox="0 0 200 12" preserveAspectRatio="none">
+                        <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
+                      </svg>
+
+                             <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
+            Poznaj nas
+          </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -52,17 +53,9 @@ function AboutImage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
       </div>
+
       
-      {/* Ikonka - prawy górny róg obrazka */}
-      <div className="absolute -top-10 -right-50 w-100 pointer-events-none opacity-11" style={{transform: 'rotate(-90deg)', zIndex: -1}}>
-        <img 
-          src="/5.webp" 
-          alt="" 
-          className="w-full h-full object-contain"
-        />
-      </div>
-      
-      <div className="absolute -top-4 -left-4 w-24 h-24 border border-[var(--accent)]/30 pointer-events-none"></div>
+      <img src="/6.webp" alt="Decor" className="absolute -top-10 -left-10 w-30 h-30 object-cover  pointer-events-none" />
       <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[var(--secondary)]/20 rounded-full blur-xl pointer-events-none"></div>
       
       <div className="absolute bottom-8 left-[-20px] bg-[var(--white)] shadow-lg p-4">

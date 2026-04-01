@@ -1,15 +1,38 @@
 import { NextResponse } from 'next/server';
+import { verifyTokenAsync, getTokenFromCookies } from '@/lib/auth';
 import { getMenuItemById, updateMenuItem, deleteMenuItem } from '@/lib/models/menuItem';
+
+/**
+ * Verify admin session - returns error response if not authenticated
+ */
+async function verifyAdminSession(request) {
+  const token = getTokenFromCookies(request.cookies);
+  if (!token) {
+    return { error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) };
+  }
+  
+  const decoded = await verifyTokenAsync(token);
+  if (!decoded) {
+    return { error: NextResponse.json({ error: 'Invalid or expired session' }, { status: 401 }) };
+  }
+  
+  return { user: decoded };
+}
 
 /**
  * GET /api/admin/menu/[id] - Get single menu item
  */
 export async function GET(request, { params }) {
+  const auth = await verifyAdminSession(request);
+  if (auth.error) return auth.error;
+  
   try {
-    const { id } = params;
+    const { id } = await params;
+    console.log('GET: Looking for menu item with id:', id);
     const item = await getMenuItemById(id);
     
     if (!item) {
+      console.log('GET: Item not found for id:', id);
       return NextResponse.json(
         { success: false, error: 'Menu item not found' },
         { status: 404 }
@@ -26,17 +49,20 @@ export async function GET(request, { params }) {
   }
 }
 
-/**
- * PUT /api/admin/menu/[id] - Update menu item
- */
 export async function PUT(request, { params }) {
+  const auth = await verifyAdminSession(request);
+  if (auth.error) return auth.error;
+  
   try {
-    const { id } = params;
+    const { id } = await params;
+    console.log('PUT: Updating menu item with id:', id);
     const body = await request.json();
+    console.log('PUT: Body:', body);
     
     const updatedItem = await updateMenuItem(id, body);
     
     if (!updatedItem) {
+      console.log('PUT: Item not found for update with id:', id);
       return NextResponse.json(
         { success: false, error: 'Menu item not found' },
         { status: 404 }
@@ -53,12 +79,12 @@ export async function PUT(request, { params }) {
   }
 }
 
-/**
- * DELETE /api/admin/menu/[id] - Delete menu item
- */
 export async function DELETE(request, { params }) {
+  const auth = await verifyAdminSession(request);
+  if (auth.error) return auth.error;
+  
   try {
-    const { id } = params;
+    const { id } = await params;
     const deleted = await deleteMenuItem(id);
     
     if (!deleted) {

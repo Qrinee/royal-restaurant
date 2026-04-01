@@ -2,20 +2,46 @@
 import './globals.css'
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
+import Header from "./components/Header"
 import MenuSection from "./components/MenuSection"
 import InstagramSection from './components/InstagramSection'
 import Footer from './components/Footer'
 import AboutSection from './components/AboutSection'
 import EventsSection from './components/EventsSection'
+import GoogleReviews from './components/GoogleReviews'
 
 export default function Home() {
-  const [mobileMenuOpen,setMobileMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [heroContent, setHeroContent] = useState(null)
+  const [aboutContent, setAboutContent] = useState(null)
+  const [eventsContent, setEventsContent] = useState(null)
+  const [settings, setSettings] = useState(null)
+  const [lightboxImage, setLightboxImage] = useState(null)
 
-  // Obsługa scroll - zoptymalizowana
-  const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 50)
-  }, [])
+  // Pobierz treści z MongoDB
+  useEffect(() => {
+    async function fetchContent() {
+      try {
+        const [heroRes, aboutRes, eventsRes, settingsRes] = await Promise.all([
+          fetch('/api/site-content?type=hero'),
+          fetch('/api/site-content?type=about'),
+          fetch('/api/site-content?type=events'),
+          fetch('/api/site-content?type=settings')
+        ]);
+        const heroData = await heroRes.json();
+        const aboutData = await aboutRes.json();
+        const eventsData = await eventsRes.json();
+        const settingsData = await settingsRes.json();
+        
+        if (heroData.success) setHeroContent(heroData.content);
+        if (aboutData.success) setAboutContent(aboutData.content);
+        if (eventsData.success) setEventsContent(eventsData.content);
+        if (settingsData.success) setSettings(settingsData.content);
+      } catch (e) {
+        console.error('Błąd pobierania treści:', e);
+      }
+    }
+    fetchContent();
+  }, []);
 
   // Ukrycie linku w widgetach Elfsight (tylko raz po zamontowaniu)
   useEffect(() => {
@@ -39,13 +65,29 @@ export default function Home() {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+
 
   return (
     <>
+      <Header 
+        desktopLeftLinks={[
+          { href: "/menu", label: "MENU" },
+          { href: "#o-nas", label: "O NAS" }
+        ]}
+        desktopRightLinks={[
+          { href: "#eventy", label: "EVENTY" }
+        ]}
+        reservationLink={{
+          href: "https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw",
+          label: "REZERWACJA"
+        }}
+        mobileMenuLinks={[
+          { href: "/menu", label: "MENU" },
+          { href: "#o-nas", label: "O NAS" },
+          { href: "#eventy", label: "EVENTY" },
+          { href: "#kontakt", label: "KONTAKT" }
+        ]}
+      />
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 flex flex-col">
         {/* SUBTLE BACKGROUND PATTERN */}
         <div className="inset-0 pointer-events-none opacity-15">
@@ -55,69 +97,16 @@ export default function Home() {
           }}></div>
         </div>
 
-        {/* HEADER - STICKY */}
-        <header className={`fixed w-full top-0 z-50 flex-shrink-0 transition-all duration-300 ${
-          scrolled 
-            ? 'bg-white' 
-            : 'bg-[var(--background)]/95 backdrop-blur-sm border-b border-[var(--secondary)]/20'
-        }`}>
-          <nav className="flex items-center justify-center px-4 md:px-6 py-3 md:py-4 max-w-7xl mx-auto w-full relative">
-            {/* Mobile menu button - always visible */}
-            <button
-              onClick={()=>setMobileMenuOpen(!mobileMenuOpen)}
-              className="cursor-pointer text-xl md:hidden text-[var(--foreground)] hover:text-[var(--accent)] transition-colors absolute left-0 p-2"
-            >
-              {mobileMenuOpen ? '✕' : '☰'}
-            </button>
-
-            {/* Desktop menu - left */}
-            <div className="hidden md:flex items-center gap-6 text-xs tracking-[0.15em] absolute left-0">
-              <Link href="/menu" className="hover:text-[var(--accent)] transition-colors">MENU</Link>
-              <Link href="#o-nas" className="hover:text-[var(--accent)] transition-colors">O NAS</Link>
-            </div>
-
-            {/* Logo */}
-            <div className="flex justify-center">
-              <Link href="/">
-                <img src="/logo.webp" alt="Royal Restaurant" className="h-8 md:h-10" style={{width: '80px'}} />
-              </Link>
-            </div>
-
-            {/* Desktop menu - right */}
-            <div className="hidden md:flex items-center gap-6 text-xs tracking-[0.15em] absolute right-0">
-              <Link href="#eventy" className="hover:text-[var(--accent)] transition-colors">EVENTY</Link>
-              <Link href="https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw" className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]">
-                REZERWACJA
-              </Link>
-            </div>
-          </nav>
-        </header>
-
-        {/* MOBILE MENU OVERLAY */}
-        <div className={`fixed inset-0 z-40 bg-[var(--background)] transition-transform duration-300 md:hidden ${
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}>
-          <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
-            <Link href="/menu" className="text-2xl tracking-[0.2em] text-[var(--foreground)] hover:text-[var(--accent)] transition-colors" onClick={() => setMobileMenuOpen(false)}>MENU</Link>
-            <Link href="#o-nas" className="text-2xl tracking-[0.2em] text-[var(--foreground)] hover:text-[var(--accent)] transition-colors" onClick={() => setMobileMenuOpen(false)}>O NAS</Link>
-            <Link href="#eventy" className="text-2xl tracking-[0.2em] text-[var(--foreground)] hover:text-[var(--accent)] transition-colors" onClick={() => setMobileMenuOpen(false)}>EVENTY</Link>
-            <Link href="#kontakt" className="text-2xl tracking-[0.2em] text-[var(--foreground)] hover:text-[var(--accent)] transition-colors" onClick={() => setMobileMenuOpen(false)}>KONTAKT</Link>
-            <button className="mt-8 px-8 py-3 border-2 border-[var(--foreground)] text-[var(--foreground)] tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all" onClick={() => setMobileMenuOpen(false)}>REZERWACJA</button>
-          </div>
-        </div>
-
         {/* HERO SECTION */}
         <section className="relative flex items-center min-h-[calc(100vh-80px)] overflow-hidden">
           {/* Tekstura tła - siatka */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `
-                linear-gradient(rgba(176, 141, 141, 0.12) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(176, 141, 141, 0.12) 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px'
-            }}></div>
-          </div>
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `
+              linear-gradient(rgba(176, 141, 141, 0.12) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(176, 141, 141, 0.12) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }}></div>
 
           {/* Tekstura diagonalnych linii */}
           <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -147,14 +136,14 @@ export default function Home() {
               <div className="lg:col-span-6 order-2 lg:order-1">
 
                 <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 border border-[var(--accent)]/50 bg-[var(--accent)]/8 mb-8">
-                  <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">ROYAL RESTAURANT</span>
+                  <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">{heroContent?.badge || 'ROYAL RESTAURANT'}</span>
                 </div>
 
                 <div className="animate-fade-up mb-8" style={{animationDelay: '0.1s'}}>
                   <h1 className="text-5xl md:text-6xl lg:text-7xl text-[var(--foreground)] leading-[1.05]" style={{fontFamily: 'var(--font-playfair)'}}>
-                    Miejsce codziennych{' '}
+                    {heroContent?.title || 'Miejsce codziennych'}{' '}
                     <span className="relative inline-block">
-                      <span className="relative z-10 text-[var(--accent)]">spotkań</span>
+                      <span className="relative z-10 text-[var(--accent)]">{heroContent?.subtitle || 'spotkań'}</span>
                       <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 12" preserveAspectRatio="none">
                         <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
                       </svg>
@@ -163,30 +152,20 @@ export default function Home() {
                   </h1>
                 </div>
 
-                {/* Decorative Line */}
-                <div className="animate-fade-up flex items-center gap-4 mb-8" style={{animationDelay: '0.15s'}}>
-                  <div className="w-20 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
-                  <div className="w-2.5 h-2.5 rotate-45 bg-[var(--accent)]"></div>
-                  <div className="w-20 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
-                </div>
+
 
                 {/* Description - Elegant */}
                 <p className="animate-fade-up text-lg md:text-xl text-[var(--foreground-secondary)] max-w-lg mb-6 leading-relaxed" style={{animationDelay: '0.2s'}}>
-                  Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00,
-                  a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania
+                  {heroContent?.description || 'Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00, a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania'}
                 </p>
 
-                {/* Pyszne.pl info */}
-
-
-                {/* CTAs */}
                 <div className="animate-fade-up flex flex-col sm:flex-row gap-4 mb-12" style={{animationDelay: '0.25s'}}>
-                  <Link href="/menu" className="cursor-pointer group relative px-10 py-5 bg-[var(--foreground)] text-white text-sm tracking-[0.2em] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-                    <span className="relative z-10 text-center flex justify-center">ZOBACZ MENU</span>
+                  <Link href={heroContent?.ctaLink || '/menu'} className="cursor-pointer group relative px-10 py-5 bg-[var(--foreground)] text-white text-sm tracking-[0.2em] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <span className="relative z-10 text-center flex justify-center">{heroContent?.ctaText || 'ZOBACZ MENU'}</span>
                     <div className="absolute inset-0 bg-[var(--accent)] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                   </Link>
-                  <a href='https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw' className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300">
-                    ZAREZERWUJ
+                  <a href={heroContent?.ctaLink2 || ' https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
+                    {heroContent?.ctaText2 || 'ZAREZERWUJ'}
                   </a>
                 </div>
               </div>
@@ -198,9 +177,9 @@ export default function Home() {
                   <div className="grid grid-cols-6 grid-rows-6 gap-3 h-[500px]">
                     
                     {/* Large Main Image - Spans 4x4 */}
-                    <div className="col-span-6 row-span-4 relative   overflow-hidden shadow-2xl group cursor-pointer">
+                    <div className="col-span-6 row-span-4 relative overflow-hidden shadow-2xl group cursor-pointer" onClick={() => setLightboxImage(heroContent?.image1 || '/680A9843-Edit.webp')}>
                       <img 
-                        src="/680A9843-Edit.webp" 
+                        src={heroContent?.image1 || '/680A9843-Edit.webp'} 
                         fetchPriority='high'
                         alt="Restaurant Interior" 
                         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
@@ -212,45 +191,43 @@ export default function Home() {
 
 
                     {/* Small Square 1 - Spans 2x2 */}
-                    <div className="col-span-2 row-span-2 relative  overflow-hidden shadow-lg group cursor-pointer">
+                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage(heroContent?.image2 || '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp')}>
                       <img 
-                        src="/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp" 
+                        src={heroContent?.image2 || '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp'} 
                         alt="Dish" 
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                     </div>
 
-                    {/* Info Card - Spans 2x2 */}
-                    <div className="col-span-2 row-span-2  bg-white shadow-lg p-4 flex flex-col justify-between">
-                      <div>
-                        <p className="text-xs tracking-widest text-[var(--accent)] mb-1">GODZINY</p>
-                        <p className="text-sm font-medium text-[var(--foreground)]">Pn-Pt: 12:00-22:00</p>
-                        <p className="text-sm font-medium text-[var(--foreground)]">Sob-Nd: 9:00-22:00</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-[var(--accent)]/10 flex items-center justify-center">
-                          <svg className="w-4 h-4 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                          </svg>
-                        </div>
-                      </div>
+                    {/* Small Square 2 - Spans 2x2 - Hours replaced with image */}
+                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage('/ig/2.webp')}>
+                      <img 
+                        src="/ig/2.webp" 
+                        alt="Restaurant View" 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                     </div>
 
-                    {/* Small decorative element */}
-                    <div className="col-span-2 row-span-2  bg-gradient-to-br from-[var(--accent)]/20 to-[var(--secondary)]/20 flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0" style={{
-                        backgroundImage: `radial-gradient(circle at 2px 2px, var(--accent)/30 1px, transparent 0)`,
-                        backgroundSize: '8px 8px'
-                      }}></div>
-                      <div className="w-12 h-12 rounded-full border border-[var(--accent)]/30 flex items-center justify-center">
-                        <span className="text-xl text-[var(--accent)]">★</span>
-                      </div>
+                    {/* Small Square 3 - Spans 2x2 - Star replaced with image */}
+                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage('/ig/3.webp')}>
+                      <img 
+                        src="/ig/3.webp" 
+                        alt="Dish Detail" 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                     </div>
                   </div>
 
-                  {/* Floating decorative circles - ograniczone do kontenera */}
-                  <div className="absolute -top-8 -right-8 w-24 h-24 border border-[var(--accent)]/20 rounded-full pointer-events-none"></div>
+                  {/* Floating decorative image - top right */}
+                  <img 
+                    src="/5.webp" 
+                    alt="Decorative" 
+                    style={{transform: "rotate(-90deg)"}}
+                    className="absolute -top-18 -right-8 w-28 object-cover pointer-events-none"
+                  />
                   <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-[var(--secondary)]/20 rounded-full blur-xl pointer-events-none"></div>
                 </div>
               </div>
@@ -267,7 +244,7 @@ export default function Home() {
           </div>
         </section>
 
-        <AboutSection />
+        <AboutSection content={aboutContent} />
 
 
         {/* OPINIE SECTION - z tłem jak Hero */}
@@ -313,15 +290,36 @@ export default function Home() {
             <div className="w-16 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
           </div>
         </div>
-<iframe id="reviews-iframe" src={"https://f2b5c9435ddf4d51b347de8723102d4f.elf.site"} style={{border: 'none', width: '100%', minHeight: '600px', marginTop: '30px'}}></iframe>
-   
+          <GoogleReviews/>
+
           </div>
         </section>
-      <EventsSection />
+      <EventsSection content={eventsContent} />
         <InstagramSection/>
       </main>
 
-      <Footer />
+      <Footer content={settings} />
+
+      {/* Lightbox for hero images */}
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center cursor-pointer animate-fade-in"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button 
+            className="absolute top-4 right-4 text-white text-4xl w-12 h-12 flex items-center justify-center hover:text-[var(--accent)] transition-colors animate-scale-in"
+            onClick={(e) => { e.stopPropagation(); setLightboxImage(null); }}
+          >
+            ×
+          </button>
+          <img 
+            src={lightboxImage} 
+            alt="Fullscreen" 
+            className="max-w-[90vw] max-h-[90vh] object-contain animate-zoom-in"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </>
   )
 }

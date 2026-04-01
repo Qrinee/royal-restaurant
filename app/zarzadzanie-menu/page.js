@@ -19,22 +19,40 @@ export default function MenuManagement() {
     english: '',
     price: '',
     category: '',
-    tag: ''
+    tag: '',
+    priority: 0
   });
 
   const router = useRouter();
 
   useEffect(() => {
-    fetchMenuItems();
-    fetchCategories();
+    // Check auth first
+    checkAuth();
   }, []);
+
+  async function checkAuth() {
+    try {
+      const res = await fetch('/api/auth/verify', { credentials: 'include' });
+      if (!res.ok) {
+        router.push('/logowanie-admin');
+        return;
+      }
+      // Auth OK, fetch data
+      fetchMenuItems();
+      fetchCategories();
+    } catch (e) {
+      router.push('/logowanie-admin');
+    }
+  }
 
   const fetchMenuItems = async () => {
     try {
       const response = await fetch('/api/admin/menu', { credentials: 'include' });
       const data = await response.json();
+      console.log('fetchMenuItems: response =', data);
       
       if (data.success) {
+        console.log('fetchMenuItems: items[0].id =', data.items[0]?.id);
         setItems(data.items);
       } else {
         setError(data.error);
@@ -63,10 +81,15 @@ export default function MenuManagement() {
     e.preventDefault();
     setError('');
     
+    console.log('handleSubmit: editingItem =', editingItem);
+    console.log('handleSubmit: formData =', formData);
+    
     try {
       const url = editingItem 
         ? `/api/admin/menu/${editingItem.id}`
         : '/api/admin/menu';
+      
+      console.log('handleSubmit: URL =', url);
       
       const method = editingItem ? 'PUT' : 'POST';
       
@@ -141,7 +164,8 @@ export default function MenuManagement() {
       english: item.english || '',
       price: item.price,
       category: item.category,
-      tag: item.tag || ''
+      tag: item.tag || '',
+      priority: item.priority || 0
     });
     setShowForm(true);
   };
@@ -153,15 +177,12 @@ export default function MenuManagement() {
       english: '',
       price: '',
       category: '',
-      tag: ''
+      tag: '',
+      priority: 0
     });
   };
 
   const handleLogout = async () => {
-    if (demoMode) {
-      router.push('/logowanie-admin');
-      return;
-    }
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -286,7 +307,7 @@ export default function MenuManagement() {
         ) : (
           <div className="space-y-8">
             {sortedCategories.map((category) => {
-              const categoryItems = items.filter(item => item.category === category);
+              const categoryItems = items.filter(item => item.category === category).sort((a, b) => (b.priority || 0) - (a.priority || 0));
               return (
                 <div key={category} className="bg-[#111111] border border-gray-800 rounded-2xl p-6">
                   <h2 className="text-xl text-white font-light mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
@@ -468,7 +489,7 @@ export default function MenuManagement() {
                   </div>
                 </div>
                 
-                <div>
+                  <div>
                   <label className="block text-gray-400 text-xs tracking-wider mb-2">
                     TAG (OPCJONALNIE)
                   </label>
@@ -479,6 +500,20 @@ export default function MenuManagement() {
                     className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-xl text-white focus:outline-none focus:border-[#b08d8d]"
                     placeholder="np. vegan, gluten-free"
                   />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-400 text-xs tracking-wider mb-2">
+                    PRIORYTET (KOLEJNOŚĆ WYŚWIETLANIA)
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.priority}
+                    onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-gray-700 rounded-xl text-white focus:outline-none focus:border-[#b08d8d]"
+                    placeholder="0"
+                  />
+                  <p className="text-gray-500 text-xs mt-1">Większa liczba = wyżej na liście</p>
                 </div>
                 
                 <div className="flex gap-4 pt-4">
