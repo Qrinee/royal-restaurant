@@ -65,7 +65,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pl">
       <head>
-        <link rel="icon" href="/logo2.webp" type="image/webp" sizes="any" />
+        <link rel="icon" href="/logo2.webp" type="image/webp" sizes="32x32" />
+        <link rel="icon" href="/logo2.webp" type="image/webp" sizes="16x16" />
         <link rel="apple-touch-icon" href="/logo.webp" />
         <meta name="theme-color" content="#323179" />
       </head>

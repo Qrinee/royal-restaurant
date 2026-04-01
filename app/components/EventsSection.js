@@ -31,17 +31,15 @@ export default function EventsSection() {
       {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            Celebruj z nami
-          </span>
           <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
             EVENTY
           </h2>
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="w-16 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
-            <div className="w-2 h-2 rotate-45 bg-[var(--accent)]"></div>
-            <div className="w-16 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
-          </div>
+          <svg className="mx-auto block w-[150px] h-3 mb-2" viewBox="0 0 200 12" preserveAspectRatio="none">
+            <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
+          </svg>
+          <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
+            Celebruj z nami
+          </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
