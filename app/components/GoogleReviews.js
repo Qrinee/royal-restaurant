@@ -21,12 +21,6 @@ const reviews = [
     color: "bg-pink-500",
     time: "2 dni temu włączone",
     text: "10/10 service, food and vibe. Great experience overall, super cool and...",
-    hasMore: true,
-    images: [
-      "https://images.unsplash.com/photo-1547592180-85f173990554",
-      "https://images.unsplash.com/photo-1551218808-94e220e084d2",
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
-    ],
   },
   {
     name: "Thomas Butz",
