@@ -69,10 +69,14 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/logo2.webp" type="image/webp" sizes="16x16" />
         <link rel="apple-touch-icon" href="/logo.webp" />
         <meta name="theme-color" content="#323179" />
+        {/* Google Tag Manager */}
+        <script dangerouslySetInnerHTML={{__html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PV9WNSS3');`}} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
       >
+        {/* Google Tag Manager (noscript) */}
+        <noscript dangerouslySetInnerHTML={{__html: '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PV9WNSS3" height="0" width="0" style="display:none;visibility:hidden"></iframe>'}} />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.2.10/iframeResizer.min.js"></script>
         <SpeedInsights/>
         {children}
