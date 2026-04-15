@@ -164,7 +164,7 @@ export default function Home() {
                     <span className="relative z-10 text-center flex justify-center">{heroContent?.ctaText || 'ZOBACZ MENU'}</span>
                     <div className="absolute inset-0 bg-[var(--accent)] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                   </Link>
-                  <a href={heroContent?.ctaLink2 || ' https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
+                  <a href={'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
                     {heroContent?.ctaText2 || 'ZAREZERWUJ'}
                   </a>
                 </div>
