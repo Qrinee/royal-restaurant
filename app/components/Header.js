@@ -7,7 +7,6 @@ export default function Header({
   mobileMenuLinks = [],
   desktopLeftLinks = [],
   desktopRightLinks = [],
-  reservationLink = null,
   scrolled = false,
   onScrolledChange = null,
   logoSrc = "/fdsa.webp"
@@ -105,14 +104,12 @@ export default function Header({
                 {link.label}
               </Link>
             ))}
-            {reservationLink && (
               <Link 
-                href={reservationLink.href} 
+                href={'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} 
                 className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]"
               >
-                {reservationLink.label}
+                REZERWACJA
               </Link>
-            )}
           </div>
         </nav>
       </header>
@@ -132,19 +129,15 @@ export default function Header({
               {link.label}
             </Link>
           ))}
-          {reservationLink && (
             <button 
               className="mt-8 px-8 py-3 border-2 border-[var(--foreground)] text-[var(--foreground)] tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all"
               onClick={() => {
-                if (reservationLink.onClick) {
-                  reservationLink.onClick()
-                }
-                setMobileMenuOpen(false)
+                window.location.href = 'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'
               }}
             >
-              {reservationLink.label}
+              REZERWACJA
             </button>
-          )}
+
         </div>
       </div>
     </>
