@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function ContentManagementPage() {
   const [selectedType, setSelectedType] = useState('hero');
+  const [selectedLang, setSelectedLang] = useState('pl');
   const [content, setContent] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ export default function ContentManagementPage() {
 
   useEffect(() => {
     checkAuth();
-  }, [selectedType]);
+  }, [selectedType, selectedLang]);
 
   async function checkAuth() {
     try {
@@ -36,9 +37,7 @@ export default function ContentManagementPage() {
   async function fetchContent() {
     setLoading(true);
     try {
-      const url = isMulti 
-        ? `/api/site-content?type=${selectedType}`
-        : `/api/site-content?type=${selectedType}`;
+      const url = `/api/site-content?type=${selectedType}&lang=${selectedLang}`;
       const res = await fetch(url, { credentials: 'include' });
       const data = await res.json();
       
@@ -69,7 +68,7 @@ export default function ContentManagementPage() {
       const res = await fetch(`/api/admin/site-content?upsert=true`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: selectedType, ...data }),
+        body: JSON.stringify({ type: selectedType, lang: selectedLang, ...data }),
         credentials: 'include'
       });
       
@@ -134,7 +133,7 @@ export default function ContentManagementPage() {
   }
 
   async function handleSeed() {
-    if (!confirm('To zaszczepi domyślne teksty. Kontynuować?')) return;
+    if (!confirm('To zaszczepi domyślne teksty w PL i EN. Kontynuować?')) return;
     
     setSaving(true);
     setError('');
@@ -148,7 +147,7 @@ export default function ContentManagementPage() {
       
       const result = await res.json();
       if (result.success) {
-        setMessage('Zaszczepiono domyślne teksty!');
+        setMessage('Zaszczepiono domyślne teksty w obu językach!');
         fetchContent();
       } else {
         setError(result.error || 'Błąd szczepienia');
@@ -168,6 +167,13 @@ export default function ContentManagementPage() {
             <a href="/panel-admin-glowny" className="text-gray-400 hover:text-white">← Powrót</a>
             <h1 className="text-white text-lg font-medium">Zarządzanie Treścią</h1>
           </div>
+          <button
+            onClick={handleSeed}
+            disabled={saving}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm"
+          >
+            📥 Zaszczep domyślne teksty
+          </button>
         </div>
       </header>
 
@@ -235,6 +241,33 @@ export default function ContentManagementPage() {
               }`}
             >
               Stopka
+            </button>
+          </div>
+        </div>
+
+        {/* Language Selector */}
+        <div className="mb-8">
+          <label className="block text-gray-400 text-sm mb-2">Wybierz język:</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSelectedLang('pl')}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                selectedLang === 'pl'
+                  ? 'bg-[#b08d8d] text-white' 
+                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
+              }`}
+            >
+              🇵🇱 Polski
+            </button>
+            <button
+              onClick={() => setSelectedLang('en')}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                selectedLang === 'en'
+                  ? 'bg-[#b08d8d] text-white' 
+                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
+              }`}
+            >
+              🇬🇧 English
             </button>
           </div>
         </div>
@@ -413,7 +446,7 @@ export default function ContentManagementPage() {
                 {selectedType === 'hero' ? (
                   <>
                     <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">ROYAL RESTAURANT</label>
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">BADGE (np. ROYAL RESTAURANT)</label>
                       <input
                         type="text"
                         name="badge"
@@ -440,12 +473,20 @@ export default function ContentManagementPage() {
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis</label>
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">Przyrostka (np. "przy polskim stole")</label>
                       <input
                         type="text"
+                        name="suffix"
+                        defaultValue={content?.suffix || ''}
+                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis</label>
+                      <textarea
                         name="description"
                         defaultValue={content?.description || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
+                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white min-h-[80px]"
                       />
                     </div>
                     <div>
@@ -506,7 +547,7 @@ export default function ContentManagementPage() {
                 ) : selectedType === 'about' ? (
                   <>
                     <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Tytuł</label>
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">Tytuł sekcji</label>
                       <input
                         type="text"
                         name="title"
@@ -518,17 +559,25 @@ export default function ContentManagementPage() {
                       <label className="block text-gray-400 text-xs mb-1 uppercase">Podtytuł</label>
                       <input
                         type="text"
-                        name="subtitle"
-                        defaultValue={content?.subtitle || ''}
+                        name="sectionTitle"
+                        defaultValue={content?.sectionTitle || ''}
                         className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis</label>
-                      <input
-                        type="text"
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis (użyj \n\n do nowych akapitów)</label>
+                      <textarea
                         name="description"
                         defaultValue={content?.description || ''}
+                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white min-h-[200px]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie</label>
+                      <input
+                        type="text"
+                        name="image1"
+                        defaultValue={content?.image1 || ''}
                         className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
                       />
                     </div>

@@ -82,6 +82,8 @@ export async function POST(request) {
       console.log('Auth error:', e.message);
     }
 
+    console.log('Login attempt:', username, 'result:', user ? 'success' : 'failed');
+
     if (!user) {
       const clientIP = getClientIP(request);
       recordFailedAttempt(clientIP);

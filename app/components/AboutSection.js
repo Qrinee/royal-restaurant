@@ -1,4 +1,9 @@
+"use client"
+import { useLanguage } from '../../lib/translations'
+
 export default function AboutSection() {
+  const { t } = useLanguage()
+  
   return (
     <section className="relative py-24 bg-[var(--white)] overflow-hidden" id="o-nas">
       {/* Subtelne tło */}
@@ -16,7 +21,7 @@ export default function AboutSection() {
       {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
           <h2 className="text-4xl text-center md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
-            O NAS
+            {t('about.title')}
           </h2>
         <div className="text-center mb-16">
    
@@ -26,7 +31,7 @@ export default function AboutSection() {
                       </svg>
 
                              <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            Poznaj nas
+            {t('about.sectionTitle')}
           </span>
         </div>
 
@@ -75,34 +80,19 @@ function AboutImage() {
 
 
 function AboutText() {
+  const { t } = useLanguage()
+  const description = t('about.description')
+  const paragraphs = description.split('\n\n')
+  
   return (
     <div className="space-y-8">
-      <div className="animate-fade-in">
-        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
-          W Royal Restaurant lubimy, kiedy przy stole dzieje się życie. Kiedy rozmowy płyną 
-          swobodnie, a dania krążą między Gośćmi. Kiedy ktoś mówi „weź spróbuj" i przesuwa 
-          talerz bliżej środka. Lubimy momenty, w których nikt się nie spieszy. Kiedy szybki 
-          obiad zamienia się w długie spotkanie, a kolacja w fascynujący wieczór, który chce 
-          się przedłużać bez końca.
-        </p>
-      </div>
-
-      <div className="animate-fade-in" style={{animationDelay: '0.1s'}}>
-        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
-          Lubimy tradycyjne polskie smaki, które wszyscy dobrze znamy - takie, do których 
-          wraca się z przyjemnością i które najlepiej smakują razem. Dlatego nasze stoły 
-          często wypełniają się dokładkami zamawianymi pod hasłem „jeszcze raz dla 
-          wszystkich".
-        </p>
-      </div>
-
-      <div className="animate-fade-in" style={{animationDelay: '0.2s'}}>
-        <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
-          Cieszy nas stukot sztućców, rozmowy ponad talerzami i cisza, która zapada, kiedy 
-          jedzenie naprawdę smakuje. Bo Royal Restaurant to miejsce, w którym 
-          najważniejsze jest wspólne bycie przy stole - swobodnie, serdecznie i po polsku.
-        </p>
-      </div>
+      {paragraphs.map((paragraph, index) => (
+        <div className="animate-fade-in" key={index} style={{animationDelay: `${index * 0.1}s`}}>
+          <p className="text-xl text-[var(--foreground-secondary)] leading-relaxed">
+            {paragraph}
+          </p>
+        </div>
+      ))}
 
       <div className="flex items-center gap-4 pt-4">
         <div className="w-20 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
@@ -111,7 +101,7 @@ function AboutText() {
       </div>
 
       <p className="text-xs tracking-[0.2em] text-[var(--accent)] italic" style={{fontFamily: 'var(--font-playfair)'}}>
-        — Zespół Royal Restaurant
+        — Royal Restaurant Team
       </p>
     </div>
   )

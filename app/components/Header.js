@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { useLanguage } from "../../lib/translations"
 
 export default function Header({ 
   mobileMenuLinks = [],
@@ -13,6 +14,7 @@ export default function Header({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [localScrolled, setLocalScrolled] = useState(scrolled)
+  const { language, changeLanguage, t } = useLanguage()
 
   // Scroll handler - defined at top level
   const handleScroll = useCallback(() => {
@@ -108,8 +110,14 @@ export default function Header({
                 href={'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} 
                 className="px-4 py-2 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors text-[10px]"
               >
-                REZERWACJA
+                {t('nav.reservation')}
               </Link>
+              <button 
+                onClick={() => changeLanguage(language === 'pl' ? 'en' : 'pl')}
+                className="px-2 py-1 text-[10px] border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-colors"
+              >
+                {language === 'pl' ? 'EN' : 'PL'}
+              </button>
           </div>
         </nav>
       </header>

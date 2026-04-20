@@ -1,4 +1,8 @@
+"use client"
+import { useLanguage } from '../../lib/translations'
+
 export default function InstagramSection() {
+    const { t } = useLanguage()
     const pinIcon = "ig/pinicon.webp"
     const images = [
         {
@@ -40,7 +44,7 @@ export default function InstagramSection() {
             @royalrestaurant_warsaw
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
-            ZAOBSERWUJ NAS
+            {t('instagram.title')}
           </h2>
           <div className="flex items-center justify-center gap-4 mt-4 md:mt-6">
             <div className="w-12 md:w-16 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>

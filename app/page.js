@@ -9,8 +9,10 @@ import Footer from './components/Footer'
 import AboutSection from './components/AboutSection'
 import EventsSection from './components/EventsSection'
 import GoogleReviews from './components/GoogleReviews'
+import { useLanguage } from '../lib/translations'
 
 export default function Home() {
+  const { t } = useLanguage()
   const [heroContent, setHeroContent] = useState(null)
   const [aboutContent, setAboutContent] = useState(null)
   const [eventsContent, setEventsContent] = useState(null)
@@ -71,21 +73,21 @@ export default function Home() {
     <>
       <Header 
         desktopLeftLinks={[
-          { href: "/menu", label: "MENU" },
-          { href: "#o-nas", label: "O NAS" }
+          { href: "/menu", label: t('nav.menu') },
+          { href: "#o-nas", label: t('nav.about') }
         ]}
         desktopRightLinks={[
-          { href: "#eventy", label: "EVENTY" }
+          { href: "#eventy", label: t('nav.events') }
         ]}
         reservationLink={{
           href: "https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw",
-          label: "REZERWACJA"
+          label: t('nav.reservation')
         }}
         mobileMenuLinks={[
-          { href: "/menu", label: "MENU" },
-          { href: "#o-nas", label: "O NAS" },
-          { href: "#eventy", label: "EVENTY" },
-          { href: "#kontakt", label: "KONTAKT" }
+          { href: "/menu", label: t('nav.menu') },
+          { href: "#o-nas", label: t('nav.about') },
+          { href: "#eventy", label: t('nav.events') },
+          { href: "#kontakt", label: t('nav.contact') }
         ]}
       />
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 flex flex-col">
@@ -136,19 +138,19 @@ export default function Home() {
               <div className="lg:col-span-6 order-2 lg:order-1">
 
                 <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 border border-[var(--accent)]/50 bg-[var(--accent)]/8 mb-8">
-                  <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">{heroContent?.badge || 'ROYAL RESTAURANT'}</span>
+                  <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">{heroContent?.badge || t('hero.badge')}</span>
                 </div>
 
                 <div className="animate-fade-up mb-8" style={{animationDelay: '0.1s'}}>
                   <h1 className="text-5xl md:text-6xl lg:text-7xl text-[var(--foreground)] leading-[1.05]" style={{fontFamily: 'var(--font-playfair)'}}>
-                    {heroContent?.title || 'Miejsce codziennych'}{' '}
+                    {heroContent?.title || t('hero.title')}{' '}
                     <span className="relative inline-block">
-                      <span className="relative z-10 text-[var(--accent)]">{heroContent?.subtitle || 'spotkań'}</span>
+                      <span className="relative z-10 text-[var(--accent)]">{heroContent?.subtitle || t('hero.subtitle')}</span>
                       <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 12" preserveAspectRatio="none">
                         <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
                       </svg>
                     </span>
-                    <br/>przy polskim stole
+                    <br/>{t('hero.suffix')}
                   </h1>
                 </div>
 
@@ -156,16 +158,16 @@ export default function Home() {
 
                 {/* Description - Elegant */}
                 <p className="animate-fade-up text-lg md:text-xl text-[var(--foreground-secondary)] max-w-lg mb-6 leading-relaxed" style={{animationDelay: '0.2s'}}>
-                  {heroContent?.description || 'Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00, a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania'}
+                  {heroContent?.description || t('hero.description')}
                 </p>
 
                 <div className="animate-fade-up flex flex-col sm:flex-row gap-4 mb-12" style={{animationDelay: '0.25s'}}>
                   <Link href={heroContent?.ctaLink || '/menu'} className="cursor-pointer group relative px-10 py-5 bg-[var(--foreground)] text-white text-sm tracking-[0.2em] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-                    <span className="relative z-10 text-center flex justify-center">{heroContent?.ctaText || 'ZOBACZ MENU'}</span>
+                    <span className="relative z-10 text-center flex justify-center">{heroContent?.ctaText || t('hero.ctaText')}</span>
                     <div className="absolute inset-0 bg-[var(--accent)] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                   </Link>
                   <a href={'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
-                    {heroContent?.ctaText2 || 'ZAREZERWUJ'}
+                    {heroContent?.ctaText2 || t('hero.ctaText2')}
                   </a>
                 </div>
               </div>
@@ -237,7 +239,7 @@ export default function Home() {
 
           {/* Scroll Indicator - wewnątrz sekcji */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-            <span className="text-[10px] tracking-[0.2em] text-[var(--foreground-muted)]">PRZEWIŃ</span>
+            <span className="text-[10px] tracking-[0.2em] text-[var(--foreground-muted)]">{t('scroll')}</span>
             <div className="w-5 h-8 border border-[var(--secondary)] rounded-full flex justify-center pt-1.5">
               <div className="w-1 h-1.5 bg-[var(--accent)] rounded-full animate-bounce"></div>
             </div>
@@ -277,16 +279,16 @@ export default function Home() {
 
           {/* Treść sekcji */}
           <div className="relative z-10  mx-auto px-6">
-       <div className="text-center">
-          <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
-            OPINIE
-          </h2>
-          <svg className="mx-auto block w-[150px] h-3 mb-2" viewBox="0 0 200 12" preserveAspectRatio="none">
-            <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
-          </svg>
-          <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            Naszych gości
-          </span>
+<div className="text-center">
+           <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
+             {t('reviews.title')}
+           </h2>
+           <svg className="mx-auto block w-[150px] h-3 mb-2" viewBox="0 0 200 12" preserveAspectRatio="none">
+             <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
+           </svg>
+           <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
+             {t('reviews.subtitle')}
+           </span>
         </div>
           <GoogleReviews/>
 

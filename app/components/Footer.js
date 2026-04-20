@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useLanguage } from "../../lib/translations"
 
 export default function Footer({ content }) {
   const [footerContent, setFooterContent] = useState(content)
   const currentYear = new Date().getFullYear()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (content) {
@@ -57,7 +59,7 @@ export default function Footer({ content }) {
               </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
-              Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka domową atmosferę.
+              {t('footer.description') || 'Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka domową atmosferę.'}
             </p>
             <div className="flex gap-4">
               <a 
@@ -83,18 +85,18 @@ export default function Footer({ content }) {
 
           {/* Opening Hours */}
           <div>
-            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">GODZINY OTWARCIA</h4>
+            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">{t('footer.openingHours')}</h4>
             <div className="space-y-3">
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <span className="text-white/70 text-sm">Poniedziałek - Piątek</span>
+                <span className="text-white/70 text-sm">{t('footer.mondayFriday')}</span>
                 <span className="text-white font-medium">12:00 - 22:00</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <span className="text-white/70 text-sm">Sobota</span>
+                <span className="text-white/70 text-sm">{t('footer.saturday')}</span>
                 <span className="text-white font-medium">9:00 - 22:00</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <span className="text-white/70 text-sm">Niedziela</span>
+                <span className="text-white/70 text-sm">{t('footer.sunday')}</span>
                 <span className="text-white font-medium">9:00 - 22:00</span>
               </div>
             </div>
@@ -102,7 +104,7 @@ export default function Footer({ content }) {
 
           {/* Pyszne.pl */}
           <div>
-            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">ZAMÓW ONLINE</h4>
+            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">{t('footer.orderOnline')}</h4>
             <a 
               href="https://www.pyszne.pl/en/menu/royal-restaurant-warszawa"
               target="_blank"
@@ -115,12 +117,12 @@ export default function Footer({ content }) {
                     <img src="/channels4_profile.webp" alt="Pyszne.pl" className="w-full h-full " />
                   </div>
                   <div>
-                    <p className="text-white/90 font-medium">Zamów przez Pyszne.pl</p>
-                    <p className="text-white/50 text-xs">Szybko i wygodnie</p>
+                    <p className="text-white/90 font-medium">{t('footer.orderPyszne')}</p>
+                    <p className="text-white/50 text-xs">{t('footer.orderSubtext')}</p>
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-white/60 text-xs group-hover:text-orange-400 transition-colors">Zamów online</span>
+                  <span className="text-white/60 text-xs group-hover:text-orange-400 transition-colors">{t('footer.orderOnline')}</span>
                   <svg className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -131,7 +133,7 @@ export default function Footer({ content }) {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">KONTAKT</h4>
+            <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">{t('footer.contact')}</h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
