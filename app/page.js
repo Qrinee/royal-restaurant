@@ -12,7 +12,7 @@ import GoogleReviews from './components/GoogleReviews'
 import { useLanguage } from '../lib/translations'
 
 export default function Home() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [heroContent, setHeroContent] = useState(null)
   const [aboutContent, setAboutContent] = useState(null)
   const [eventsContent, setEventsContent] = useState(null)
@@ -24,10 +24,10 @@ export default function Home() {
     async function fetchContent() {
       try {
         const [heroRes, aboutRes, eventsRes, settingsRes] = await Promise.all([
-          fetch('/api/site-content?type=hero'),
-          fetch('/api/site-content?type=about'),
-          fetch('/api/site-content?type=events'),
-          fetch('/api/site-content?type=settings')
+          fetch(`/api/site-content?type=hero&lang=${language}`),
+          fetch(`/api/site-content?type=about&lang=${language}`),
+          fetch(`/api/site-content?type=events&lang=${language}`),
+          fetch(`/api/site-content?type=settings&lang=${language}`)
         ]);
         const heroData = await heroRes.json();
         const aboutData = await aboutRes.json();
@@ -43,7 +43,7 @@ export default function Home() {
       }
     }
     fetchContent();
-  }, []);
+  }, [language]);
 
   // Ukrycie linku w widgetach Elfsight (tylko raz po zamontowaniu)
   useEffect(() => {
@@ -150,7 +150,7 @@ export default function Home() {
                         <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
                       </svg>
                     </span>
-                    <br/>{t('hero.suffix')}
+                    <br/>{heroContent?.suffix || t('hero.suffix')}
                   </h1>
                 </div>
 
