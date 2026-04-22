@@ -67,15 +67,27 @@ export default function ContentManagementPage() {
       const data = Object.fromEntries(formData);
       
       const processedData = {};
+      let hasImageUpdate = false;
       for (const key of Object.keys(data)) {
-        if (key.startsWith('image1_') || key.startsWith('image2_')) {
+        if (key === 'image1' || key === 'image2') {
+          if (data[key]) {
+            processedData[key] = data[key];
+            hasImageUpdate = true;
+          }
+        } else if (key.startsWith('image1_') || key.startsWith('image2_')) {
           const field = key.split('_')[0];
           if (!processedData[field] && data[key]) {
             processedData[field] = data[key];
+            hasImageUpdate = true;
           }
         } else if (data[key] !== '') {
           processedData[key] = data[key];
         }
+      }
+      
+      // Update image for all languages if image was changed
+      if (hasImageUpdate) {
+        processedData.updateAllLangs = true;
       }
       
       const res = await fetch(`/api/admin/site-content?upsert=true`, {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyTokenAsync, getTokenFromCookies } from '@/lib/auth';
-import { getAllSiteContent, getContentByType, getSingleContent, createSiteContent, updateSiteContent, deleteSiteContent, upsertSiteContent } from '@/lib/models/siteContent';
+import { getAllSiteContent, getContentByType, getSingleContent, createSiteContent, updateSiteContent, deleteSiteContent, upsertSiteContent, updateImageForAllLangs } from '@/lib/models/siteContent';
 
 /**
  * Verify admin session - returns error response if not authenticated
@@ -74,6 +74,17 @@ export async function POST(request) {
     if (upsert) {
       // For single-item types (hero, about, settings, footer)
       const result = await upsertSiteContent(type, data);
+      
+      // If updateAllLangs is requested, also update image for all languages
+      if (data.updateAllLangs && (data.image1 || data.image2)) {
+        if (data.image1) {
+          await updateImageForAllLangs(type, 'image1', data.image1);
+        }
+        if (data.image2) {
+          await updateImageForAllLangs(type, 'image2', data.image2);
+        }
+      }
+      
       return NextResponse.json(result);
     }
     
