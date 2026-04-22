@@ -143,7 +143,7 @@ export default function Footer({ content }) {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-white/90 text-sm">{address.split(',')[0]}</p>
+                  <p className="text-white/90 text-sm"></p>
                   <p className="text-white/60 text-sm">{address.split(',')[1] || address}</p>
                 </div>
               </div>

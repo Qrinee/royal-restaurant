@@ -46,11 +46,7 @@ export default function InstagramSection() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
             {t('instagram.title')}
           </h2>
-          <div className="flex items-center justify-center gap-4 mt-4 md:mt-6">
-            <div className="w-12 md:w-16 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
-            <div className="w-2 h-2 rotate-45 bg-[var(--accent)]"></div>
-            <div className="w-12 md:w-16 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
-          </div>
+
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4 md:px-8 max-w-7xl mx-auto">
         {

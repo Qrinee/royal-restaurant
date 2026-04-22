@@ -94,11 +94,7 @@ function AboutText() {
         </div>
       ))}
 
-      <div className="flex items-center gap-4 pt-4">
-        <div className="w-20 h-px bg-gradient-to-r from-transparent to-[var(--accent)]"></div>
-        <div className="w-2.5 h-2.5 rotate-45 bg-[var(--accent)]"></div>
-        <div className="w-20 h-px bg-gradient-to-l from-transparent to-[var(--accent)]"></div>
-      </div>
+
 
       <p className="text-xs tracking-[0.2em] text-[var(--accent)] italic" style={{fontFamily: 'var(--font-playfair)'}}>
         — Royal Restaurant Team

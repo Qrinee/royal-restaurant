@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import ImageUploader from '../components/ImageUploader';
 
 export default function ContentManagementPage() {
   const [selectedType, setSelectedType] = useState('hero');
@@ -65,10 +66,22 @@ export default function ContentManagementPage() {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData);
       
+      const processedData = {};
+      for (const key of Object.keys(data)) {
+        if (key.startsWith('image1_') || key.startsWith('image2_')) {
+          const field = key.split('_')[0];
+          if (!processedData[field] && data[key]) {
+            processedData[field] = data[key];
+          }
+        } else if (data[key] !== '') {
+          processedData[key] = data[key];
+        }
+      }
+      
       const res = await fetch(`/api/admin/site-content?upsert=true`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: selectedType, lang: selectedLang, ...data }),
+        body: JSON.stringify({ type: selectedType, lang: selectedLang, ...processedData }),
         credentials: 'include'
       });
       
@@ -375,13 +388,7 @@ export default function ContentManagementPage() {
                         ) : (
                           <>
                             <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie 1</label>
-                              <input
-                                type="text"
-                                name="image1"
-                                defaultValue={item.image1}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
+                              <ImageUploader name={`image1_${item.id}`} defaultValue={item.image1} label="Zdjęcie 1" />
                             </div>
                             <div>
                               <label className="block text-gray-400 text-xs mb-1 uppercase">URL 1</label>
@@ -393,13 +400,7 @@ export default function ContentManagementPage() {
                               />
                             </div>
                             <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie 2</label>
-                              <input
-                                type="text"
-                                name="image2"
-                                defaultValue={item.image2}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
+                              <ImageUploader name={`image2_${item.id}`} defaultValue={item.image2} label="Zdjęcie 2" />
                             </div>
                             <div>
                               <label className="block text-gray-400 text-xs mb-1 uppercase">URL 2</label>
@@ -526,22 +527,10 @@ export default function ContentManagementPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie 1</label>
-                      <input
-                        type="text"
-                        name="image1"
-                        defaultValue={content?.image1 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
+                      <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie 1" />
                     </div>
                     <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie 2</label>
-                      <input
-                        type="text"
-                        name="image2"
-                        defaultValue={content?.image2 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
+                      <ImageUploader name="image2" defaultValue={content?.image2 || ''} label="Zdjęcie 2" />
                     </div>
                   </>
                 ) : selectedType === 'about' ? (
@@ -581,14 +570,8 @@ export default function ContentManagementPage() {
                         className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
                       />
                     </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie</label>
-                      <input
-                        type="text"
-                        name="image1"
-                        defaultValue={content?.image1 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
+<div>
+                      <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie" />
                     </div>
                   </>
                 ) : selectedType === 'settings' ? (

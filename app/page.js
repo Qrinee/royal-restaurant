@@ -238,12 +238,6 @@ export default function Home() {
           </div>
 
           {/* Scroll Indicator - wewnątrz sekcji */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-            <span className="text-[10px] tracking-[0.2em] text-[var(--foreground-muted)]">{t('scroll')}</span>
-            <div className="w-5 h-8 border border-[var(--secondary)] rounded-full flex justify-center pt-1.5">
-              <div className="w-1 h-1.5 bg-[var(--accent)] rounded-full animate-bounce"></div>
-            </div>
-          </div>
         </section>
 
         <AboutSection content={aboutContent} />
