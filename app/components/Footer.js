@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useLanguage } from "../../lib/translations"
 
+
 export default function Footer({ content }) {
   const [footerContent, setFooterContent] = useState(content)
   const currentYear = new Date().getFullYear()
@@ -53,10 +54,7 @@ export default function Footer({ content }) {
           {/* Logo & Description */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
-              <div>
-                <h3 className="text-lg tracking-[0.15em] font-medium">ROYAL</h3>
-                <p className="text-xs tracking-widest text-white/50">RESTAURANT</p>
-              </div>
+                <img src={'logo2.webp'} alt="Royal Restaurant" className="h-10 w-auto" />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               {t('footer.description') || 'Wyjątkowe miejsce, gdzie tradycyjna polska kuchnia spotyka domową atmosferę.'}
