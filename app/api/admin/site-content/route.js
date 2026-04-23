@@ -93,7 +93,7 @@ export async function POST(request) {
       
       if (result.success) {
         // Return updated content
-        const updatedContent = await getSingleContent(type, lang || 'pl');
+        const updatedContent = await getSingleContent(type, data.lang || 'pl');
         return NextResponse.json({ success: true, content: updatedContent });
       }
       
