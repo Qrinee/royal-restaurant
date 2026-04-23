@@ -80,14 +80,14 @@ export default function ImageUploader({ name, defaultValue, label }) {
             <div className="w-5 h-5 border-2 border-[#b08d8d] border-t-transparent rounded-full animate-spin"></div>
             <span>Przesyłanie...</span>
           </div>
-        ) : preview ? (
-          <div className="relative group">
-            <img src={preview} alt="Preview" className="max-h-40 mx-auto rounded" />
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
-              <span className="text-white text-sm">Kliknij aby zmienić</span>
-            </div>
-          </div>
-        ) : (
+         ) : preview ? (
+           <div className="relative group">
+             <img src={preview.startsWith('data:') ? preview : `${preview}?t=${Date.now()}`} alt="Preview" className="max-h-40 mx-auto rounded" />
+             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
+               <span className="text-white text-sm">Kliknij aby zmienić</span>
+             </div>
+           </div>
+         ) : (
           <div className="text-center text-gray-500">
             <div className="text-3xl mb-2">📁</div>
             <div className="text-sm">Przeciągnij obrazek lub kliknij</div>

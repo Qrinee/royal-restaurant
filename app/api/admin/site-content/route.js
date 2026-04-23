@@ -76,13 +76,25 @@ export async function POST(request) {
       const result = await upsertSiteContent(type, data);
       
       // If updateAllLangs is requested, also update image for all languages
-      if (data.updateAllLangs && (data.image1 || data.image2)) {
+      if (data.updateAllLangs && (data.image1 || data.image2 || data.image3 || data.image4)) {
         if (data.image1) {
           await updateImageForAllLangs(type, 'image1', data.image1);
         }
         if (data.image2) {
           await updateImageForAllLangs(type, 'image2', data.image2);
         }
+        if (data.image3) {
+          await updateImageForAllLangs(type, 'image3', data.image3);
+        }
+        if (data.image4) {
+          await updateImageForAllLangs(type, 'image4', data.image4);
+        }
+      }
+      
+      if (result.success) {
+        // Return updated content
+        const updatedContent = await getSingleContent(type, lang || 'pl');
+        return NextResponse.json({ success: true, content: updatedContent });
       }
       
       return NextResponse.json(result);

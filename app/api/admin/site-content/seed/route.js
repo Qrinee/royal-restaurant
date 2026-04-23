@@ -30,34 +30,38 @@ export async function POST(request) {
   
   try {
     const defaultContent = [
-      {
-        type: 'hero',
-        lang: 'pl',
-        badge: 'ROYAL RESTAURANT',
-        title: 'Miejsce codziennych',
-        subtitle: 'spotkań',
-        suffix: 'przy polskim stole',
-        description: 'Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00, a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania',
-        ctaText: 'ZOBACZ MENU',
-        ctaLink: '/menu',
-        ctaText2: 'ZAREZERWUJ',
-        image1: '/680A9843-Edit.webp',
-        image2: '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp'
-      },
-      {
-        type: 'hero',
-        lang: 'en',
-        badge: 'ROYAL RESTAURANT',
-        title: 'A place for everyday',
-        subtitle: 'gatherings',
-        suffix: 'at the Polish table',
-        description: "We're waiting for you from Monday to Friday from 12:00 to 22:00, and on weekend mornings we invite you from 9:00 for a relaxed breakfast",
-        ctaText: 'SEE THE MENU',
-        ctaLink: '/menu',
-        ctaText2: 'MAKE A RESERVATION',
-        image1: '/680A9843-Edit.webp',
-        image2: '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp'
-      },
+       {
+         type: 'hero',
+         lang: 'pl',
+         badge: 'ROYAL RESTAURANT',
+         title: 'Miejsce codziennych',
+         subtitle: 'spotkań',
+         suffix: 'przy polskim stole',
+         description: 'Czekamy na Was od poniedziałku do piątku od 12:00 do 22:00, a w weekendowe poranki zapraszamy już od 9:00 na spokojne śniadania',
+         ctaText: 'ZOBACZ MENU',
+         ctaLink: '/menu',
+         ctaText2: 'ZAREZERWUJ',
+         image1: '/680A9843-Edit.webp',
+         image2: '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp',
+         image3: '/ig/2.webp',
+         image4: '/ig/3.webp'
+       },
+       {
+         type: 'hero',
+         lang: 'en',
+         badge: 'ROYAL RESTAURANT',
+         title: 'A place for everyday',
+         subtitle: 'gatherings',
+         suffix: 'at the Polish table',
+         description: "We're waiting for you from Monday to Friday from 12:00 to 22:00, and on weekend mornings we invite you from 9:00 for a relaxed breakfast",
+         ctaText: 'SEE THE MENU',
+         ctaLink: '/menu',
+         ctaText2: 'MAKE A RESERVATION',
+         image1: '/680A9843-Edit.webp',
+         image2: '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp',
+         image3: '/ig/2.webp',
+         image4: '/ig/3.webp'
+       },
       {
         type: 'about',
         lang: 'pl',

@@ -38,7 +38,8 @@ export default function ContentManagementPage() {
   async function fetchContent() {
     setLoading(true);
     try {
-      const url = `/api/site-content?type=${selectedType}&lang=${selectedLang}`;
+      const timestamp = Date.now();
+      const url = `/api/site-content?type=${selectedType}&lang=${selectedLang}&_t=${timestamp}`;
       const res = await fetch(url, { credentials: 'include' });
       const data = await res.json();
       
@@ -56,7 +57,7 @@ export default function ContentManagementPage() {
     }
   }
 
-  async function handleSave(e) {
+   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
     setError('');
@@ -69,12 +70,12 @@ export default function ContentManagementPage() {
       const processedData = {};
       let hasImageUpdate = false;
       for (const key of Object.keys(data)) {
-        if (key === 'image1' || key === 'image2') {
+        if (key === 'image1' || key === 'image2' || key === 'image3' || key === 'image4') {
           if (data[key]) {
             processedData[key] = data[key];
             hasImageUpdate = true;
           }
-        } else if (key.startsWith('image1_') || key.startsWith('image2_')) {
+        } else if (key.startsWith('image1_') || key.startsWith('image2_') || key.startsWith('image3_') || key.startsWith('image4_')) {
           const field = key.split('_')[0];
           if (!processedData[field] && data[key]) {
             processedData[field] = data[key];
@@ -100,7 +101,14 @@ export default function ContentManagementPage() {
       const result = await res.json();
       if (result.success) {
         setMessage('Zapisano pomyślnie!');
-        fetchContent();
+        // For single-item types, update content directly from response
+        const singleTypes = ['hero', 'about', 'settings', 'footer'];
+        if (singleTypes.includes(selectedType) && result.content) {
+          setContent(result.content);
+        } else {
+          // For multi-item types (events, instagram), refresh list
+          fetchContent();
+        }
       } else {
         setError(result.error || 'Błąd zapisywania');
       }
@@ -448,12 +456,12 @@ export default function ContentManagementPage() {
               </div>
             )}
           </div>
-        ) : (
-          /* Single-item editing */
-          <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
-            <h2 className="text-white text-xl mb-6">{selectedType === 'hero' ? 'Sekcja Hero' : selectedType === 'about' ? 'O Nas' : selectedType === 'settings' ? 'Ustawienia' : 'Stopka'}</h2>
-            
-            <form onSubmit={handleSave}>
+         ) : (
+           /* Single-item editing */
+           <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
+             <h2 className="text-white text-xl mb-6">{selectedType === 'hero' ? 'Sekcja Hero' : selectedType === 'about' ? 'O Nas' : selectedType === 'settings' ? 'Ustawienia' : 'Stopka'}</h2>
+             
+             <form onSubmit={handleSave}>
               <input type="hidden" name="id" value={content?.id || ''} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedType === 'hero' ? (
@@ -538,13 +546,19 @@ export default function ContentManagementPage() {
                         className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
                       />
                     </div>
-                    <div>
-                      <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie 1" />
-                    </div>
-                    <div>
-                      <ImageUploader name="image2" defaultValue={content?.image2 || ''} label="Zdjęcie 2" />
-                    </div>
-                  </>
+                     <div>
+                       <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie 1 (duże)" />
+                     </div>
+                     <div>
+                       <ImageUploader name="image2" defaultValue={content?.image2 || ''} label="Zdjęcie 2 (prawe górne)" />
+                     </div>
+                     <div>
+                       <ImageUploader name="image3" defaultValue={content?.image3 || ''} label="Zdjęcie 3 (lewe dolne)" />
+                     </div>
+                     <div>
+                       <ImageUploader name="image4" defaultValue={content?.image4 || ''} label="Zdjęcie 4 (prawe dolne)" />
+                     </div>
+                   </>
                 ) : selectedType === 'about' ? (
                   <>
                     <div className="md:col-span-2">

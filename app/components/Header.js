@@ -10,7 +10,6 @@ export default function Header({
   desktopRightLinks = [],
   scrolled = false,
   onScrolledChange = null,
-  logoSrc = "/fdsa.webp"
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [localScrolled, setLocalScrolled] = useState(scrolled)
@@ -88,10 +87,10 @@ export default function Header({
             ))}
           </div>
 
-          {/* Logo - Clickable to home */}
+          {/* Logo - Clickable to home - use default from public/ */}
           <div className="flex justify-center">
             <Link href="/">
-              <img src={logoSrc} alt="Royal Restaurant" className="h-12 md:h-14 w-auto max-w-[120px] md:max-w-[140px]" />
+              <img src="/fdsa.webp" alt="Royal Restaurant" className="h-12 md:h-14 w-auto max-w-[120px] md:max-w-[140px]" />
             </Link>
           </div>
 
@@ -140,7 +139,7 @@ export default function Header({
             <button 
               className="mt-8 px-8 py-3 border-2 border-[var(--foreground)] text-[var(--foreground)] tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all"
               onClick={() => {
-                window.location.href = 'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'
+                window.location.href = 'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6e2'
               }}
             >
               REZERWACJA

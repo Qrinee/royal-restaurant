@@ -23,12 +23,30 @@ export async function GET(request) {
     const singleTypes = ['hero', 'about', 'settings', 'footer'];
     if (singleTypes.includes(type)) {
       const content = await getSingleContent(type, lang);
-      return NextResponse.json({ success: true, content });
+      return NextResponse.json(
+        { success: true, content },
+        {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          }
+        }
+      );
     }
     
     // Multiple types (events, instagram, etc.)
     const items = await getContentByType(type, lang);
-    return NextResponse.json({ success: true, items });
+    return NextResponse.json(
+      { success: true, items },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+      }
+    );
   } catch (error) {
     console.error('Error fetching site content:', error);
     return NextResponse.json(

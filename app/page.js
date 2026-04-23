@@ -23,21 +23,27 @@ export default function Home() {
   useEffect(() => {
     async function fetchContent() {
       try {
-        const [heroRes, aboutRes, eventsRes, settingsRes] = await Promise.all([
+        const [heroRes, aboutRes, eventsRes, settingsRes, instagramRes] = await Promise.all([
           fetch(`/api/site-content?type=hero&lang=${language}`),
           fetch(`/api/site-content?type=about&lang=${language}`),
           fetch(`/api/site-content?type=events&lang=${language}`),
-          fetch(`/api/site-content?type=settings&lang=${language}`)
+          fetch(`/api/site-content?type=settings&lang=${language}`),
+          fetch(`/api/site-content?type=instagram&lang=${language}`)
         ]);
         const heroData = await heroRes.json();
         const aboutData = await aboutRes.json();
         const eventsData = await eventsRes.json();
         const settingsData = await settingsRes.json();
+        const instagramData = await instagramRes.json();
+        
+        console.log('Hero data:', heroData);
+        console.log('Instagram data:', instagramData);
         
         if (heroData.success) setHeroContent(heroData.content);
         if (aboutData.success) setAboutContent(aboutData.content);
         if (eventsData.success) setEventsContent(eventsData.content);
         if (settingsData.success) setSettings(settingsData.content);
+        if (instagramData.success) setInstagramItems(instagramData.items || []);
       } catch (e) {
         console.error('Błąd pobierania treści:', e);
       }
@@ -71,25 +77,25 @@ export default function Home() {
 
   return (
     <>
-      <Header 
-        desktopLeftLinks={[
-          { href: "/menu", label: t('nav.menu') },
-          { href: "#o-nas", label: t('nav.about') }
-        ]}
-        desktopRightLinks={[
-          { href: "#eventy", label: t('nav.events') }
-        ]}
-        reservationLink={{
-          href: "https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw",
-          label: t('nav.reservation')
-        }}
-        mobileMenuLinks={[
-          { href: "/menu", label: t('nav.menu') },
-          { href: "#o-nas", label: t('nav.about') },
-          { href: "#eventy", label: t('nav.events') },
-          { href: "#kontakt", label: t('nav.contact') }
-        ]}
-      />
+       <Header 
+         desktopLeftLinks={[
+           { href: "/menu", label: t('nav.menu') },
+           { href: "#o-nas", label: t('nav.about') }
+         ]}
+         desktopRightLinks={[
+           { href: "#eventy", label: t('nav.events') }
+         ]}
+         reservationLink={{
+           href: "https://dineout.pl/en/restaurants/27968bce8-volla-bar-restaurant-leonardo-royal-hotel-warsaw",
+           label: t('nav.reservation')
+         }}
+         mobileMenuLinks={[
+           { href: "/menu", label: t('nav.menu') },
+           { href: "#o-nas", label: t('nav.about') },
+           { href: "#eventy", label: t('nav.events') },
+           { href: "#kontakt", label: t('nav.contact') }
+         ]}
+       />
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] pt-20 flex flex-col">
         {/* SUBTLE BACKGROUND PATTERN */}
         <div className="inset-0 pointer-events-none opacity-15">
@@ -178,49 +184,87 @@ export default function Home() {
                   {/* Main Bento Grid */}
                   <div className="grid grid-cols-6 grid-rows-6 gap-3 h-[500px]">
                     
-                    {/* Large Main Image - Spans 4x4 */}
-                    <div className="col-span-6 row-span-4 relative overflow-hidden shadow-2xl group cursor-pointer" onClick={() => setLightboxImage(heroContent?.image1 || '/680A9843-Edit.webp')}>
-                      <img 
-                        src={heroContent?.image1 || '/680A9843-Edit.webp'} 
-                        fetchPriority='high'
-                        alt="Restaurant Interior" 
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-            
-                    </div>
+                     {/* Large Main Image - Spans 4x4 */}
+                     <div className="col-span-6 row-span-4 relative overflow-hidden shadow-2xl group cursor-pointer" onClick={() => heroContent?.image1 && setLightboxImage(heroContent.image1)}>
+                       {heroContent?.image1 ? (
+                         <img 
+                           src={`${heroContent.image1}?t=${Date.now()}`} 
+                           fetchPriority='high'
+                           alt="Restaurant Interior" 
+                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                         />
+                       ) : (
+                         <div className="w-full h-full bg-gray-800 animate-pulse"></div>
+                       )}
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+             
+                     </div>
 
 
 
-                    {/* Small Square 1 - Spans 2x2 */}
-                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage(heroContent?.image2 || '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp')}>
-                      <img 
-                        src={heroContent?.image2 || '/20260309_1554_Image Generation_remix_01kk9her3sfy686518tepp89zj.webp'} 
-                        alt="Dish" 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                    </div>
+                     {/* Small Square 1 - Spans 2x2 */}
+                     <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => heroContent?.image2 && setLightboxImage(heroContent.image2)}>
+                       {heroContent?.image2 ? (
+                         <img 
+                           src={`${heroContent.image2}?t=${Date.now()}`} 
+                           alt="Dish" 
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         />
+                       ) : (
+                         <div className="w-full h-full bg-gray-800 animate-pulse"></div>
+                       )}
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                      </div>
 
-                    {/* Small Square 2 - Spans 2x2 - Hours replaced with image */}
-                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage('/ig/2.webp')}>
-                      <img 
-                        src="/ig/2.webp" 
-                        alt="Restaurant View" 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                    </div>
+                     {/* Small Square 2 - Spans 2x2 - image3 */}
+                     <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => {
+                       if (heroContent) {
+                         const imgUrl = heroContent.image3 || '/ig/2.webp';
+                         setLightboxImage(imgUrl);
+                       }
+                     }}>
+                       {!heroContent ? (
+                         <div className="w-full h-full bg-gray-800 animate-pulse"></div>
+                       ) : heroContent.image3 ? (
+                         <img 
+                           src={`${heroContent.image3}?t=${Date.now()}`} 
+                           alt="Restaurant View" 
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         />
+                       ) : (
+                         <img 
+                           src="/ig/2.webp" 
+                           alt="Restaurant View" 
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         />
+                       )}
+                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                     </div>
 
-                    {/* Small Square 3 - Spans 2x2 - Star replaced with image */}
-                    <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => setLightboxImage('/ig/3.webp')}>
-                      <img 
-                        src="/ig/3.webp" 
-                        alt="Dish Detail" 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                    </div>
+                     {/* Small Square 3 - Spans 2x2 - image4 */}
+                     <div className="col-span-2 row-span-2 relative overflow-hidden shadow-lg group cursor-pointer" onClick={() => {
+                       if (heroContent) {
+                         const imgUrl = heroContent.image4 || '/ig/3.webp';
+                         setLightboxImage(imgUrl);
+                       }
+                     }}>
+                       {!heroContent ? (
+                         <div className="w-full h-full bg-gray-800 animate-pulse"></div>
+                       ) : heroContent.image4 ? (
+                         <img 
+                           src={`${heroContent.image4}?t=${Date.now()}`} 
+                           alt="Dish Detail" 
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         />
+                       ) : (
+                         <img 
+                           src="/ig/3.webp" 
+                           alt="Dish Detail" 
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         />
+                       )}
+                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                     </div>
                   </div>
 
                   {/* Floating decorative image - top right */}
