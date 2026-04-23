@@ -36,9 +36,6 @@ export default function Home() {
         const settingsData = await settingsRes.json();
         const instagramData = await instagramRes.json();
         
-        console.log('Hero data:', heroData);
-        console.log('Instagram data:', instagramData);
-        
         if (heroData.success) setHeroContent(heroData.content);
         if (aboutData.success) setAboutContent(aboutData.content);
         if (eventsData.success) setEventsContent(eventsData.content);

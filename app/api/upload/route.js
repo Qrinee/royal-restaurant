@@ -17,7 +17,7 @@ export async function POST(request) {
     const fileName = `${uniqueSuffix}.${ext}`;
 
     // Use Vercel Blob if token is available (production on Vercel)
-    if (process.env.VERCEL_BLOB_READ_WRITE_TOKEN) {
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
         const blob = await put(fileName, file, {
           access: 'public',
@@ -43,7 +43,7 @@ export async function POST(request) {
     // In production without Vercel Blob token, fail early
     if (process.env.NODE_ENV === 'production') {
       return NextResponse.json(
-        { error: 'Brak konfiguracji Vercel Blob. Skonfiguruj VERCEL_BLOB_READ_WRITE_TOKEN.' },
+        { error: 'Brak konfiguracji Vercel Blob. Skonfiguruj BLOB_READ_WRITE_TOKEN.' },
         { status: 500 }
       );
     }
