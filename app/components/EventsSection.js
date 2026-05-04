@@ -97,14 +97,14 @@ export default function EventsSection() {
             {/* Przyciski pobierania */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button 
-                onClick={() => handleDownload('spotkania')}
+                onClick={() => window.location.href = '/1.pdf'}
                 disabled={downloadLoading === 'spotkania'}
                 className="cursor-pointer px-6 py-3 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.15em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 disabled:opacity-50"
               >
                 {downloadLoading === 'spotkania' ? 'Pobieranie...' : t('events.ctaText').toUpperCase()}
               </button>
               <button 
-                onClick={() => handleDownload('eventy')}
+                onClick={() => window.location.href = '/2.pdf'}
                 disabled={downloadLoading === 'eventy'}
                 className="cursor-pointer px-6 py-3 bg-[var(--foreground)] text-white text-sm tracking-[0.15em] hover:bg-[var(--accent)] transition-all duration-300 disabled:opacity-50"
               >
