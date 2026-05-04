@@ -1,19 +1,54 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from '../../lib/translations'
 
 export default function EventsSection() {
   const [downloadLoading, setDownloadLoading] = useState(null)
-  const { t } = useLanguage()
+  const [eventsData, setEventsData] = useState(null)
+  const { t, language } = useLanguage()
 
-  const handleDownload = (type) => {
-    setDownloadLoading(type)
-    // Symulacja pobierania - w rzeczywistości tutaj byłby kod do pobierania PDF
-    setTimeout(() => {
-      setDownloadLoading(null)
-      alert(`Pobieranie oferty: ${type}`)
-    }, 1000)
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const timestamp = Date.now()
+        const url = `/api/site-content?type=events&lang=${language}&_t=${timestamp}`
+        const res = await fetch(url, { credentials: 'include' })
+        const data = await res.json()
+        
+        if (data.success && data.items && data.items.length > 0) {
+          // Assuming we want the first event item
+          setEventsData(data.items[0])
+        }
+      } catch (error) {
+        console.error('Failed to fetch events data:', error)
+      }
+    }
+
+    fetchEventsData()
+  }, [language])
+
+  const handleDownload = (linkType) => {
+    setDownloadLoading(linkType)
+    
+    // Redirect to the appropriate link
+    let link = ''
+    if (linkType === 'spotkania' && eventsData?.ctaLink) {
+      link = eventsData.ctaLink
+    } else if (linkType === 'eventy' && eventsData?.ctaLink2) {
+      link = eventsData.ctaLink2
+    }
+    
+    if (link) {
+      // Open in same tab
+      window.location.href = link
+    } else {
+      // Fallback to simulation if no link is available
+      setTimeout(() => {
+        setDownloadLoading(null)
+        alert(`Pobieranie oferty: ${linkType}`)
+      }, 1000)
+    }
   }
 
   const description = t('events.description')
