@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useLanguage } from '../../lib/translations'
 
-export default function EventsSection() {
+export default function EventsSection({ content }) {
   const [downloadLoading, setDownloadLoading] = useState(null)
   const [eventsData, setEventsData] = useState(null)
   const { t, language } = useLanguage()
@@ -17,7 +17,6 @@ export default function EventsSection() {
         const data = await res.json()
         
         if (data.success && data.items && data.items.length > 0) {
-          // Assuming we want the first event item
           setEventsData(data.items[0])
         }
       } catch (error) {
@@ -25,33 +24,31 @@ export default function EventsSection() {
       }
     }
 
-    fetchEventsData()
-  }, [language])
-
-  const handleDownload = (linkType) => {
-    setDownloadLoading(linkType)
-    
-    // Redirect to the appropriate link
-    let link = ''
-    if (linkType === 'spotkania' && eventsData?.ctaLink) {
-      link = eventsData.ctaLink
-    } else if (linkType === 'eventy' && eventsData?.ctaLink2) {
-      link = eventsData.ctaLink2
-    }
-    
-    if (link) {
-      // Open in same tab
-      window.location.href = link
+    // Use passed content if available, otherwise fetch
+    if (content) {
+      setEventsData(content)
     } else {
-      // Fallback to simulation if no link is available
-      setTimeout(() => {
-        setDownloadLoading(null)
-        alert(`Pobieranie oferty: ${linkType}`)
-      }, 1000)
+      fetchEventsData()
     }
+  }, [language, content])
+
+  // Użyj danych z CMS, z fallbackiem do tłumaczeń
+  const title = eventsData?.title || t('events.title')
+  const sectionTitle = eventsData?.subtitle || t('events.sectionTitle')
+  const description = eventsData?.description || t('events.description')
+  const ctaText = eventsData?.ctaText || t('events.ctaText')
+  const ctaText2 = eventsData?.ctaText2 || t('events.ctaText2')
+  const ctaLink = eventsData?.ctaLink || '/1.pdf'
+  const ctaLink2 = eventsData?.ctaLink2 || '/2.pdf'
+  const image = eventsData?.image1 || '/680A9843-Edit.webp'
+
+  const handleDownload = (link) => {
+    if (!link) return
+    setDownloadLoading(link)
+    window.location.href = link
+    setTimeout(() => setDownloadLoading(null), 2000)
   }
 
-  const description = t('events.description')
   const paragraphs = description.split('\n\n')
 
   return (
@@ -72,13 +69,13 @@ export default function EventsSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
-            {t('events.title')}
+            {title}
           </h2>
           <svg className="mx-auto block w-[150px] h-3 mb-2" viewBox="0 0 200 12" preserveAspectRatio="none">
             <path d="M0,8 Q50,2 100,8 T200,8" stroke="var(--accent)" strokeWidth="3" fill="none"/>
           </svg>
           <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            {t('events.sectionTitle')}
+            {sectionTitle}
           </span>
         </div>
 
@@ -97,18 +94,18 @@ export default function EventsSection() {
             {/* Przyciski pobierania */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button 
-                onClick={() => window.location.href = '/1.pdf'}
-                disabled={downloadLoading === 'spotkania'}
+                onClick={() => handleDownload(ctaLink)}
+                disabled={downloadLoading === ctaLink}
                 className="cursor-pointer px-6 py-3 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.15em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 disabled:opacity-50"
               >
-                {downloadLoading === 'spotkania' ? 'Pobieranie...' : t('events.ctaText').toUpperCase()}
+                {downloadLoading === ctaLink ? 'Pobieranie...' : ctaText.toUpperCase()}
               </button>
               <button 
-                onClick={() => window.location.href = '/2.pdf'}
-                disabled={downloadLoading === 'eventy'}
+                onClick={() => handleDownload(ctaLink2)}
+                disabled={downloadLoading === ctaLink2}
                 className="cursor-pointer px-6 py-3 bg-[var(--foreground)] text-white text-sm tracking-[0.15em] hover:bg-[var(--accent)] transition-all duration-300 disabled:opacity-50"
               >
-                {downloadLoading === 'eventy' ? 'Pobieranie...' : t('events.ctaText2').toUpperCase()}
+                {downloadLoading === ctaLink2 ? 'Pobieranie...' : ctaText2.toUpperCase()}
               </button>
             </div>
           </div>
@@ -117,7 +114,7 @@ export default function EventsSection() {
           <div className="relative order-1 lg:order-2">
             <div className="relative overflow-hidden shadow-2xl">
               <img 
-                src="/680A9843-Edit.webp" 
+                src={image} 
                 alt="Eventy w Royal Restaurant" 
                 className="w-full h-[500px] md:h-[600px] object-cover object-top"
               />

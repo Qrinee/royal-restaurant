@@ -17,6 +17,7 @@ export default function Home() {
   const [aboutContent, setAboutContent] = useState(null)
   const [eventsContent, setEventsContent] = useState(null)
   const [settings, setSettings] = useState(null)
+  const [instagramItems, setInstagramItems] = useState([])
   const [lightboxImage, setLightboxImage] = useState(null)
 
   // Pobierz treści z MongoDB
@@ -40,7 +41,7 @@ export default function Home() {
         if (aboutData.success) setAboutContent(aboutData.content);
         if (eventsData.success) setEventsContent(eventsData.content);
         if (settingsData.success) setSettings(settingsData.content);
-        if (instagramData.success) setInstagramItems(instagramData.items || []);
+        if (instagramData.success) setInstagramItems(instagramData.content || null);
       } catch (e) {
         console.error('Błąd pobierania treści:', e);
       }
@@ -169,7 +170,7 @@ export default function Home() {
                     <span className="relative z-10 text-center flex justify-center">{heroContent?.ctaText || t('hero.ctaText')}</span>
                     <div className="absolute inset-0 bg-[var(--accent)] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                   </Link>
-                  <a href={'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
+                  <a href={heroContent?.ctaLink2 || 'https://mojstolik.pl/restauracja/Royal%20Restuarant/66ad3368e8b621c81fe8a4cc6d86c6e2'} className="cursor-pointer px-10 py-5 border-2 border-[var(--foreground)] text-[var(--foreground)] text-sm tracking-[0.2em] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 flex items-center justify-center text-center">
                     {heroContent?.ctaText2 || t('hero.ctaText2')}
                   </a>
                 </div>
@@ -330,7 +331,7 @@ export default function Home() {
           </div>
         </section>
       <EventsSection content={eventsContent} />
-        <InstagramSection/>
+        <InstagramSection items={instagramItems}/>
       </main>
 
       <Footer content={settings} />

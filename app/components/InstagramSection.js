@@ -1,10 +1,12 @@
 "use client"
 import { useLanguage } from '../../lib/translations'
 
-export default function InstagramSection() {
+export default function InstagramSection({ items }) {
     const { t } = useLanguage()
     const pinIcon = "ig/pinicon.webp"
-    const images = [
+
+    // Default images as fallback if no CMS data
+    const defaultImages = [
         {
             images: "ig/1.webp",
             link: "https://www.instagram.com/p/DPn0STtjUYE/"
@@ -22,6 +24,39 @@ export default function InstagramSection() {
             link: "https://www.instagram.com/p/DVqw0n_DWqo/"
         }
     ]
+
+    // Use CMS items if available, map to expected format
+    let images = defaultImages
+    
+    if (items) {
+        // Items can be either an array (multi-item) or a single object (single-item)
+        const item = Array.isArray(items) ? items[0] : items;
+        if (item) {
+            images = [
+                {
+                    images: item.image1 || '',
+                    link: item.link1 || '#'
+                },
+                {
+                    images: item.image2 || '',
+                    link: item.link2 || '#'
+                },
+                {
+                    images: item.image3 || '',
+                    link: item.link3 || '#'
+                },
+                {
+                    images: item.image4 || '',
+                    link: item.link4 || '#'
+                }
+            ]
+        }
+    }
+
+    // Filter out items without valid image
+    const validImages = images.filter(img => img.images)
+
+    if (validImages.length === 0) return null
 
   return (
     <section className="relative py-12 md:py-24 bg-white overflow-hidden">
@@ -48,10 +83,15 @@ export default function InstagramSection() {
           </h2>
 
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4 md:px-8 max-w-7xl mx-auto">
+        <div className={`grid gap-4 px-4 md:px-8 max-w-7xl mx-auto ${
+          validImages.length === 1 ? 'grid-cols-1 max-w-sm' :
+          validImages.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl' :
+          validImages.length === 3 ? 'grid-cols-1 sm:grid-cols-3 max-w-4xl' :
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+        }`}>
         {
-            images.map((src, index) => (
-                <a href={src.link} target="_blank" key={index} className="block">
+            validImages.map((src, index) => (
+                <a href={src.link} target="_blank" rel="noopener noreferrer" key={index} className="block">
                     <div className="relative aspect-square overflow-hidden cursor-pointer group">
                         <img 
                             src={pinIcon} 

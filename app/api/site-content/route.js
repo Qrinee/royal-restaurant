@@ -20,7 +20,7 @@ export async function GET(request) {
     }
     
     // Single types (only one item)
-    const singleTypes = ['hero', 'about', 'settings', 'footer'];
+    const singleTypes = ['hero', 'about', 'settings', 'footer', 'instagram'];
     if (singleTypes.includes(type)) {
       const content = await getSingleContent(type, lang);
       return NextResponse.json(

@@ -1,8 +1,29 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import ImageUploader from '../components/ImageUploader';
+import SectionTabs from '../components/admin/SectionTabs';
+import LanguageSwitcher from '../components/admin/LanguageSwitcher';
+import AdminPageHeader from '../components/admin/AdminPageHeader';
+import StatusMessage from '../components/admin/StatusMessage';
+import { HiddenField, SubmitButton } from '../components/admin/Field';
+import HeroForm from '../components/admin/forms/HeroForm';
+import AboutForm from '../components/admin/forms/AboutForm';
+import EventsForm from '../components/admin/forms/EventsForm';
+import InstagramSingleForm from '../components/admin/forms/InstagramSingleForm';
+import SettingsForm from '../components/admin/forms/SettingsForm';
+import FooterForm from '../components/admin/forms/FooterForm';
+
+const SECTION_LABELS = {
+  hero: 'Sekcja Hero',
+  about: 'O Nas',
+  events: 'Eventy',
+  instagram: 'Instagram',
+  settings: 'Ustawienia',
+  footer: 'Stopka',
+};
+
+const SINGLE_TYPES = ['hero', 'about', 'settings', 'footer', 'instagram'];
 
 export default function ContentManagementPage() {
   const [selectedType, setSelectedType] = useState('hero');
@@ -14,35 +35,17 @@ export default function ContentManagementPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  
-  const isMulti = selectedType === 'events' || selectedType === 'instagram';
 
-  useEffect(() => {
-    checkAuth();
-  }, [selectedType, selectedLang]);
+  const isMulti = selectedType === 'events';
 
-  async function checkAuth() {
-    try {
-      const res = await fetch('/api/auth/verify', { credentials: 'include' });
-      if (!res.ok) {
-        router.push('/logowanie-admin');
-        return;
-      }
-      // Auth OK, fetch content
-      fetchContent();
-    } catch (e) {
-      router.push('/logowanie-admin');
-    }
-  }
-
-  async function fetchContent() {
+  const fetchContent = useCallback(async () => {
     setLoading(true);
     try {
       const timestamp = Date.now();
       const url = `/api/site-content?type=${selectedType}&lang=${selectedLang}&_t=${timestamp}`;
       const res = await fetch(url, { credentials: 'include' });
       const data = await res.json();
-      
+
       if (data.success) {
         if (isMulti) {
           setItems(data.items || []);
@@ -50,34 +53,50 @@ export default function ContentManagementPage() {
           setContent(data.content || null);
         }
       }
-    } catch (e) {
+    } catch {
       setError('Błąd pobierania danych');
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedType, selectedLang, isMulti]);
 
-   async function handleSave(e) {
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/verify', { credentials: 'include' });
+        if (!res.ok) {
+          router.push('/logowanie-admin');
+          return;
+        }
+        fetchContent();
+      } catch {
+        router.push('/logowanie-admin');
+      }
+    }
+    checkAuth();
+  }, [fetchContent, router]);
+
+  async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
     setError('');
     setMessage('');
-    
+
     try {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData);
-      
+
       const processedData = {};
       let hasImageUpdate = false;
+      const imageFields = ['image1', 'image2', 'image3', 'image4'];
+
       for (const key of Object.keys(data)) {
-        if (key === 'image1' || key === 'image2' || key === 'image3' || key === 'image4') {
-          if (data[key]) {
-            processedData[key] = data[key];
-            hasImageUpdate = true;
-          }
-        } else if (key.startsWith('image1_') || key.startsWith('image2_') || key.startsWith('image3_') || key.startsWith('image4_')) {
+        if (imageFields.includes(key) && data[key]) {
+          processedData[key] = data[key];
+          hasImageUpdate = true;
+        } else if (imageFields.some((f) => key.startsWith(f + '_')) && data[key]) {
           const field = key.split('_')[0];
-          if (!processedData[field] && data[key]) {
+          if (!processedData[field]) {
             processedData[field] = data[key];
             hasImageUpdate = true;
           }
@@ -85,34 +104,30 @@ export default function ContentManagementPage() {
           processedData[key] = data[key];
         }
       }
-      
-      // Update image for all languages if image was changed
+
       if (hasImageUpdate) {
         processedData.updateAllLangs = true;
       }
-      
-      const res = await fetch(`/api/admin/site-content?upsert=true`, {
+
+      const res = await fetch('/api/admin/site-content?upsert=true', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: selectedType, lang: selectedLang, ...processedData }),
-        credentials: 'include'
+        credentials: 'include',
       });
-      
+
       const result = await res.json();
       if (result.success) {
         setMessage('Zapisano pomyślnie!');
-        // For single-item types, update content directly from response
-        const singleTypes = ['hero', 'about', 'settings', 'footer'];
-        if (singleTypes.includes(selectedType) && result.content) {
+        if (SINGLE_TYPES.includes(selectedType) && result.content) {
           setContent(result.content);
         } else {
-          // For multi-item types (events, instagram), refresh list
           fetchContent();
         }
       } else {
         setError(result.error || 'Błąd zapisywania');
       }
-    } catch (e) {
+    } catch {
       setError('Błąd zapisywania');
     } finally {
       setSaving(false);
@@ -121,11 +136,11 @@ export default function ContentManagementPage() {
 
   async function handleDelete(id) {
     if (!confirm('Czy na pewno usunąć?')) return;
-    
+
     try {
       const res = await fetch(`/api/admin/site-content?id=${id}`, {
         method: 'DELETE',
-        credentials: 'include'
+        credentials: 'include',
       });
       const result = await res.json();
       if (result.success) {
@@ -133,7 +148,7 @@ export default function ContentManagementPage() {
       } else {
         setError(result.error || 'Błąd usuwania');
       }
-    } catch (e) {
+    } catch {
       setError('Błąd usuwania');
     }
   }
@@ -142,15 +157,15 @@ export default function ContentManagementPage() {
     setSaving(true);
     setError('');
     setMessage('');
-    
+
     try {
       const res = await fetch('/api/admin/site-content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: selectedType, title: 'Nowa pozycja', order: items.length }),
-        credentials: 'include'
+        credentials: 'include',
       });
-      
+
       const result = await res.json();
       if (result.success) {
         setMessage('Dodano nową pozycję');
@@ -158,7 +173,7 @@ export default function ContentManagementPage() {
       } else {
         setError(result.error || 'Błąd dodawania');
       }
-    } catch (e) {
+    } catch {
       setError('Błąd dodawania');
     } finally {
       setSaving(false);
@@ -167,17 +182,17 @@ export default function ContentManagementPage() {
 
   async function handleSeed() {
     if (!confirm('To zaszczepi domyślne teksty w PL i EN. Kontynuować?')) return;
-    
+
     setSaving(true);
     setError('');
     setMessage('');
-    
+
     try {
       const res = await fetch('/api/admin/site-content/seed', {
         method: 'POST',
-        credentials: 'include'
+        credentials: 'include',
       });
-      
+
       const result = await res.json();
       if (result.success) {
         setMessage('Zaszczepiono domyślne teksty w obu językach!');
@@ -185,21 +200,35 @@ export default function ContentManagementPage() {
       } else {
         setError(result.error || 'Błąd szczepienia');
       }
-    } catch (e) {
+    } catch {
       setError('Błąd szczepienia');
     } finally {
       setSaving(false);
     }
   }
 
+  function renderFormFields() {
+    switch (selectedType) {
+      case 'hero':
+        return <HeroForm content={content} />;
+      case 'about':
+        return <AboutForm content={content} />;
+      case 'settings':
+        return <SettingsForm content={content} />;
+      case 'instagram':
+        return <InstagramSingleForm content={content} />;
+      case 'footer':
+        return <FooterForm content={content} />;
+      default:
+        return null;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      <header className="border-b border-gray-800 bg-[#111111]">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <a href="/panel-admin-glowny" className="text-gray-400 hover:text-white">← Powrót</a>
-            <h1 className="text-white text-lg font-medium">Zarządzanie Treścią</h1>
-          </div>
+      <AdminPageHeader
+        title="Zarządzanie Treścią"
+        rightAction={
           <button
             onClick={handleSeed}
             disabled={saving}
@@ -207,120 +236,33 @@ export default function ContentManagementPage() {
           >
             📥 Zaszczep domyślne teksty
           </button>
-        </div>
-      </header>
+        }
+      />
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         {/* Type Selector */}
         <div className="mb-8">
           <label className="block text-gray-400 text-sm mb-2">Wybierz sekcję do edycji:</label>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedType('hero')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'hero'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              Sekcja Hero
-            </button>
-            <button
-              onClick={() => setSelectedType('about')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'about'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              O Nas
-            </button>
-            <button
-              onClick={() => setSelectedType('events')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'events'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              Eventy
-            </button>
-            <button
-              onClick={() => setSelectedType('instagram')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'instagram'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              Instagram
-            </button>
-            <button
-              onClick={() => setSelectedType('settings')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'settings'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              Ustawienia
-            </button>
-            <button
-              onClick={() => setSelectedType('footer')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedType === 'footer'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              Stopka
-            </button>
-          </div>
+          <SectionTabs selected={selectedType} onChange={setSelectedType} />
         </div>
 
         {/* Language Selector */}
         <div className="mb-8">
           <label className="block text-gray-400 text-sm mb-2">Wybierz język:</label>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setSelectedLang('pl')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedLang === 'pl'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              🇵🇱 Polski
-            </button>
-            <button
-              onClick={() => setSelectedLang('en')}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                selectedLang === 'en'
-                  ? 'bg-[#b08d8d] text-white' 
-                  : 'bg-[#111111] text-gray-400 hover:text-white border border-gray-800'
-              }`}
-            >
-              🇬🇧 English
-            </button>
-          </div>
+          <LanguageSwitcher selected={selectedLang} onChange={setSelectedLang} />
         </div>
 
-        {message && (
-          <div className="mb-4 p-3 bg-green-500/20 text-green-400 rounded-lg">{message}</div>
-        )}
-        {error && (
-          <div className="mb-4 p-3 bg-red-500/20 text-red-400 rounded-lg">{error}</div>
-        )}
+        <StatusMessage message={message} error={error} />
 
         {loading ? (
           <div className="text-center py-8">
-            <div className="w-8 h-8 border-2 border-[#b08d8d] border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-8 h-8 border-2 border-[#b08d8d] border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : isMulti ? (
-          /* Multi-item editing */
+          /* Multi-item editing (Events) */
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-white text-xl">{selectedType === 'events' ? 'Eventy' : 'Instagram'}</h2>
+              <h2 className="text-white text-xl">{SECTION_LABELS[selectedType]}</h2>
               <button
                 onClick={handleAddNew}
                 disabled={saving}
@@ -329,354 +271,21 @@ export default function ContentManagementPage() {
                 + Dodaj nowe
               </button>
             </div>
-            
-            {items.length === 0 ? (
-              <p className="text-gray-500">Brak pozycji. Dodaj nową.</p>
-            ) : (
-              <div className="space-y-4">
-                {items.map((item, idx) => (
-                  <div key={item.id} className="bg-[#111111] border border-gray-800 rounded-xl p-4">
-                    <form onSubmit={handleSave}>
-                      <input type="hidden" name="id" value={item.id} />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {selectedType === 'events' ? (
-                          <>
-                            <div className="md:col-span-2">
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Tytuł</label>
-                              <input
-                                type="text"
-                                name="title"
-                                defaultValue={item.title}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div className="md:col-span-2">
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Podtytuł</label>
-                              <input
-                                type="text"
-                                name="subtitle"
-                                defaultValue={item.subtitle}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div className="md:col-span-2">
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Opis</label>
-                              <input
-                                type="text"
-                                name="description"
-                                defaultValue={item.description}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Przycisk 1</label>
-                              <input
-                                type="text"
-                                name="ctaText"
-                                defaultValue={item.ctaText}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Link 1</label>
-                              <input
-                                type="text"
-                                name="ctaLink"
-                                defaultValue={item.ctaLink}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Przycisk 2</label>
-                              <input
-                                type="text"
-                                name="ctaText2"
-                                defaultValue={item.ctaText2}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">Link 2</label>
-                              <input
-                                type="text"
-                                name="ctaLink2"
-                                defaultValue={item.ctaLink2}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div>
-                              <ImageUploader name={`image1_${item.id}`} defaultValue={item.image1} label="Zdjęcie 1" />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">URL 1</label>
-                              <input
-                                type="text"
-                                name="link1"
-                                defaultValue={item.link1}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                            <div>
-                              <ImageUploader name={`image2_${item.id}`} defaultValue={item.image2} label="Zdjęcie 2" />
-                            </div>
-                            <div>
-                              <label className="block text-gray-400 text-xs mb-1 uppercase">URL 2</label>
-                              <input
-                                type="text"
-                                name="link2"
-                                defaultValue={item.link2}
-                                className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                          </>
-                        )}
-                      </div>
-                      <div className="flex gap-2 mt-4">
-                        <button
-                          type="submit"
-                          disabled={saving}
-                          className="px-4 py-2 bg-[#b08d8d] text-white rounded-lg hover:opacity-90 disabled:opacity-50"
-                        >
-                          {saving ? 'Zapisywanie...' : 'Zapisz'}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(item.id)}
-                          className="px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-500/20"
-                        >
-                          Usuń
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                ))}
-              </div>
-            )}
+            <EventsForm items={items} saving={saving} onSave={handleSave} onDelete={handleDelete} />
           </div>
-         ) : (
-           /* Single-item editing */
-           <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
-             <h2 className="text-white text-xl mb-6">{selectedType === 'hero' ? 'Sekcja Hero' : selectedType === 'about' ? 'O Nas' : selectedType === 'settings' ? 'Ustawienia' : 'Stopka'}</h2>
-             
-             <form onSubmit={handleSave}>
-              <input type="hidden" name="id" value={content?.id || ''} />
+        ) : (
+          /* Single-item editing */
+          <div className="bg-[#111111] border border-gray-800 rounded-xl p-6">
+            <h2 className="text-white text-xl mb-6">{SECTION_LABELS[selectedType]}</h2>
+
+            <form onSubmit={handleSave}>
+              <HiddenField name="id" value={content?.id || ''} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedType === 'hero' ? (
-                  <>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">BADGE (np. ROYAL RESTAURANT)</label>
-                      <input
-                        type="text"
-                        name="badge"
-                        defaultValue={content?.badge || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Tytuł</label>
-                      <input
-                        type="text"
-                        name="title"
-                        defaultValue={content?.title || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Podtytuł</label>
-                      <input
-                        type="text"
-                        name="subtitle"
-                        defaultValue={content?.subtitle || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Przyrostka (np. "przy polskim stole")</label>
-                      <input
-                        type="text"
-                        name="suffix"
-                        defaultValue={content?.suffix || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis</label>
-                      <textarea
-                        name="description"
-                        defaultValue={content?.description || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white min-h-[80px]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Przycisk 1</label>
-                      <input
-                        type="text"
-                        name="ctaText"
-                        defaultValue={content?.ctaText || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Link 1</label>
-                      <input
-                        type="text"
-                        name="ctaLink"
-                        defaultValue={content?.ctaLink || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Przycisk 2</label>
-                      <input
-                        type="text"
-                        name="ctaText2"
-                        defaultValue={content?.ctaText2 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Link 2</label>
-                      <input
-                        type="text"
-                        name="ctaLink2"
-                        defaultValue={content?.ctaLink2 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                     <div>
-                       <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie 1 (duże)" />
-                     </div>
-                     <div>
-                       <ImageUploader name="image2" defaultValue={content?.image2 || ''} label="Zdjęcie 2 (prawe górne)" />
-                     </div>
-                     <div>
-                       <ImageUploader name="image3" defaultValue={content?.image3 || ''} label="Zdjęcie 3 (lewe dolne)" />
-                     </div>
-                     <div>
-                       <ImageUploader name="image4" defaultValue={content?.image4 || ''} label="Zdjęcie 4 (prawe dolne)" />
-                     </div>
-                   </>
-                ) : selectedType === 'about' ? (
-                  <>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Tytuł sekcji</label>
-                      <input
-                        type="text"
-                        name="title"
-                        defaultValue={content?.title || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Podtytuł</label>
-                      <input
-                        type="text"
-                        name="sectionTitle"
-                        defaultValue={content?.sectionTitle || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Opis (użyj \n\n do nowych akapitów)</label>
-                      <textarea
-                        name="description"
-                        defaultValue={content?.description || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white min-h-[200px]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Zdjęcie</label>
-                      <input
-                        type="text"
-                        name="image1"
-                        defaultValue={content?.image1 || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-<div>
-                      <ImageUploader name="image1" defaultValue={content?.image1 || ''} label="Zdjęcie" />
-                    </div>
-                  </>
-                ) : selectedType === 'settings' ? (
-                  <>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Nazwa restauracji</label>
-                      <input
-                        type="text"
-                        name="restaurantName"
-                        defaultValue={content?.restaurantName || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Adres</label>
-                      <input
-                        type="text"
-                        name="address"
-                        defaultValue={content?.address || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Telefon</label>
-                      <input
-                        type="text"
-                        name="phone"
-                        defaultValue={content?.phone || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Email</label>
-                      <input
-                        type="text"
-                        name="email"
-                        defaultValue={content?.email || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Instagram</label>
-                      <input
-                        type="text"
-                        name="instagram"
-                        defaultValue={content?.socialLinks?.instagram || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-400 text-xs mb-1 uppercase">Facebook</label>
-                      <input
-                        type="text"
-                        name="facebook"
-                        defaultValue={content?.socialLinks?.facebook || ''}
-                        className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-400 text-xs mb-1 uppercase">Copyright tekst</label>
-                    <input
-                      type="text"
-                      name="description"
-                      defaultValue={content?.description || ''}
-                      className="w-full bg-[#0a0a0a] border border-gray-800 rounded-lg p-2 text-white"
-                    />
-                  </div>
-                )}
+                {renderFormFields()}
               </div>
-              
-              <button
-                type="submit"
-                disabled={saving}
-                className="mt-6 px-6 py-3 bg-[#b08d8d] text-white rounded-lg hover:opacity-90 disabled:opacity-50"
-              >
-                {saving ? 'Zapisywanie...' : 'Zapisz zmiany'}
-              </button>
+              <div className="mt-6">
+                <SubmitButton saving={saving} />
+              </div>
             </form>
           </div>
         )}

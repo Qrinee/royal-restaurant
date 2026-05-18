@@ -1,8 +1,14 @@
 "use client"
 import { useLanguage } from '../../lib/translations'
 
-export default function AboutSection() {
+export default function AboutSection({ content }) {
   const { t } = useLanguage()
+  
+  // Użyj danych z CMS, z fallbackiem do tłumaczeń
+  const title = content?.title || t('about.title')
+  const sectionTitle = content?.sectionTitle || t('about.sectionTitle')
+  const description = content?.description || t('about.description')
+  const image = content?.image1 || '/680A0006.webp'
   
   return (
     <section className="relative py-24 bg-[var(--white)] overflow-hidden" id="o-nas">
@@ -21,7 +27,7 @@ export default function AboutSection() {
       {/* Główna treść sekcji */}
       <div className="relative z-10 max-w-7xl mx-auto px-6">
           <h2 className="text-4xl text-center md:text-5xl text-[var(--foreground)] mt-4" style={{fontFamily: 'var(--font-playfair)'}}>
-            {t('about.title')}
+            {title}
           </h2>
         <div className="text-center mb-16">
    
@@ -31,15 +37,15 @@ export default function AboutSection() {
                       </svg>
 
                              <span className="text-xs tracking-[0.3em] text-[var(--accent)] uppercase font-medium">
-            {t('about.sectionTitle')}
+            {sectionTitle}
           </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          <AboutImage />
+          <AboutImage image={image} />
           
-          <AboutText />
+          <AboutText description={description} />
           
         </div>
       </div>
@@ -47,12 +53,12 @@ export default function AboutSection() {
   )
 }
 
-function AboutImage() {
+function AboutImage({ image }) {
   return (
     <div className="relative">
       <div className="relative overflow-hidden shadow-2xl">
         <img 
-          src="/680A0006.webp" 
+          src={image} 
           alt="Wnętrze restauracji Royal" 
           className="w-full h-[500px] md:h-[600px] object-cover object-top"
         />
@@ -79,9 +85,7 @@ function AboutImage() {
 }
 
 
-function AboutText() {
-  const { t } = useLanguage()
-  const description = t('about.description')
+function AboutText({ description }) {
   const paragraphs = description.split('\n\n')
   
   return (
@@ -96,9 +100,6 @@ function AboutText() {
 
 
 
-      <p className="text-xs tracking-[0.2em] text-[var(--accent)] italic" style={{fontFamily: 'var(--font-playfair)'}}>
-        — Royal Restaurant Team
-      </p>
     </div>
   )
 }

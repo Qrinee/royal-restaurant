@@ -32,8 +32,8 @@ export async function GET(request) {
     const type = searchParams.get('type');
     
     if (type) {
-      // For types that should have only one item (hero, about, settings, footer)
-      const singleTypes = ['hero', 'about', 'settings', 'footer'];
+      // For types that should have only one item (hero, about, settings, footer, instagram)
+      const singleTypes = ['hero', 'about', 'settings', 'footer', 'instagram'];
       if (singleTypes.includes(type)) {
         const content = await getSingleContent(type);
         return NextResponse.json({ success: true, content });
