@@ -15,7 +15,7 @@ export default function Footer({ content }) {
     }
     async function fetchFooter() {
       try {
-        const res = await fetch('/api/site-content?type=settings')
+        const res = await fetch('/api/site-content?type=footer')
         const data = await res.json()
         if (data.success && data.content) {
           setFooterContent(data.content)
@@ -24,9 +24,8 @@ export default function Footer({ content }) {
         console.error('Błąd pobierania stopki:', e)
       }
     }
-    if (!content) {
-      fetchFooter()
-    }
+    // Always fetch from footer type (not settings) to avoid stale data
+    fetchFooter()
   }, [content])
 
   const address = footerContent?.address || 'Marszałkowska 138, 00-001 Warszawa'
@@ -34,6 +33,9 @@ export default function Footer({ content }) {
   const restaurantName = footerContent?.restaurantName || 'Royal Restaurant'
   const fbLink = footerContent?.socialLinks?.facebook || footerContent?.facebook || 'https://www.facebook.com/RoyalRestaurantWarsaw/'
   const igLink = footerContent?.socialLinks?.instagram || footerContent?.instagram || 'https://www.instagram.com/royalrestaurant_warsaw'
+  const mondayFridayHours = footerContent?.mondayFriday || footerContent?.openingHours?.[0]?.hours || '12:00 - 22:00'
+  const saturdayHours = footerContent?.saturday || footerContent?.openingHours?.[1]?.hours || '9:00 - 22:00'
+  const sundayHours = footerContent?.sunday || footerContent?.openingHours?.[2]?.hours || '9:00 - 22:00'
 
   return (
     <footer className="relative bg-[#1a1a1a] text-white pt-16 pb-8 overflow-hidden">
@@ -89,15 +91,15 @@ export default function Footer({ content }) {
             <div className="space-y-3">
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
                 <span className="text-white/70 text-sm">{t('footer.mondayFriday')}</span>
-                <span className="text-white font-medium">12:00 - 22:00</span>
+                <span className="text-white font-medium">{mondayFridayHours}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
                 <span className="text-white/70 text-sm">{t('footer.saturday')}</span>
-                <span className="text-white font-medium">9:00 - 22:00</span>
+                <span className="text-white font-medium">{saturdayHours}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-white/10">
                 <span className="text-white/70 text-sm">{t('footer.sunday')}</span>
-                <span className="text-white font-medium">9:00 - 22:00</span>
+                <span className="text-white font-medium">{sundayHours}</span>
               </div>
             </div>
           </div>

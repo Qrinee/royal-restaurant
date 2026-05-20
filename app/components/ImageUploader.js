@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 
-export default function ImageUploader({ name, defaultValue, label }) {
+export default function ImageUploader({ name, defaultValue, label, required }) {
   const [preview, setPreview] = useState(defaultValue || '');
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -53,7 +53,12 @@ export default function ImageUploader({ name, defaultValue, label }) {
 
   return (
     <div>
-      {label && <label className="block text-gray-400 text-xs mb-1 uppercase">{label}</label>}
+      {label && (
+        <label className="block text-gray-400 text-xs mb-1 uppercase">
+          {label}
+          {required && <span className="text-red-400 ml-0.5">*</span>}
+        </label>
+      )}
       <input type="hidden" name={name} value={preview} />
       
       <div

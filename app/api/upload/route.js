@@ -11,9 +11,11 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Brak pliku' }, { status: 400 });
     }
 
-    // Only allow image files
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ error: 'Dozwolone tylko pliki graficzne' }, { status: 400 });
+    // Allow images and PDFs
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+    if (!isImage && !isPdf) {
+      return NextResponse.json({ error: 'Dozwolone tylko pliki graficzne i PDF' }, { status: 400 });
     }
 
     const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(7)}`;

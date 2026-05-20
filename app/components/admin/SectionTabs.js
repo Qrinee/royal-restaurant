@@ -5,8 +5,7 @@ const SECTION_TYPES = [
   { key: 'about', label: 'O Nas' },
   { key: 'events', label: 'Eventy' },
   { key: 'instagram', label: 'Instagram' },
-  { key: 'settings', label: 'Ustawienia' },
-  { key: 'footer', label: 'Stopka' },
+  { key: 'footer', label: 'Stopka (dane kontaktowe)' },
 ];
 
 export default function SectionTabs({ selected, onChange }) {

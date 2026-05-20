@@ -16,34 +16,38 @@ export default function Home() {
   const [heroContent, setHeroContent] = useState(null)
   const [aboutContent, setAboutContent] = useState(null)
   const [eventsContent, setEventsContent] = useState(null)
-  const [settings, setSettings] = useState(null)
+  const [footerData, setFooterData] = useState(null)
   const [instagramItems, setInstagramItems] = useState([])
   const [lightboxImage, setLightboxImage] = useState(null)
+  const [contentReady, setContentReady] = useState(false)
 
   // Pobierz treści z MongoDB
   useEffect(() => {
+    setContentReady(false);
     async function fetchContent() {
       try {
-        const [heroRes, aboutRes, eventsRes, settingsRes, instagramRes] = await Promise.all([
+        const [heroRes, aboutRes, eventsRes, footerRes, instagramRes] = await Promise.all([
           fetch(`/api/site-content?type=hero&lang=${language}`),
           fetch(`/api/site-content?type=about&lang=${language}`),
           fetch(`/api/site-content?type=events&lang=${language}`),
-          fetch(`/api/site-content?type=settings&lang=${language}`),
+          fetch(`/api/site-content?type=footer`),
           fetch(`/api/site-content?type=instagram&lang=${language}`)
         ]);
         const heroData = await heroRes.json();
         const aboutData = await aboutRes.json();
         const eventsData = await eventsRes.json();
-        const settingsData = await settingsRes.json();
+        const footerDataRes = await footerRes.json();
         const instagramData = await instagramRes.json();
         
         if (heroData.success) setHeroContent(heroData.content);
         if (aboutData.success) setAboutContent(aboutData.content);
         if (eventsData.success) setEventsContent(eventsData.content);
-        if (settingsData.success) setSettings(settingsData.content);
+        if (footerDataRes.success) setFooterData(footerDataRes.content);
         if (instagramData.success) setInstagramItems(instagramData.content || null);
       } catch (e) {
         console.error('Błąd pobierania treści:', e);
+      } finally {
+        setContentReady(true);
       }
     }
     fetchContent();
@@ -72,6 +76,17 @@ export default function Home() {
   }, [])
 
 
+
+  if (!contentReady) {
+    return (
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-2 border-[#b08d8d] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[var(--foreground-secondary)] text-sm" style={{ fontFamily: 'var(--font-playfair)' }}>Royal Restaurant</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -334,7 +349,7 @@ export default function Home() {
         <InstagramSection items={instagramItems}/>
       </main>
 
-      <Footer content={settings} />
+      <Footer content={footerData} />
 
       {/* Lightbox for hero images */}
       {lightboxImage && (
