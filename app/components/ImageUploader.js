@@ -87,7 +87,7 @@ export default function ImageUploader({ name, defaultValue, label, required }) {
           </div>
          ) : preview ? (
            <div className="relative group">
-             <img src={preview.startsWith('data:') ? preview : `${preview}?t=${Date.now()}`} alt="Preview" className="max-h-40 mx-auto rounded" />
+            <img src={preview.startsWith('data:') ? preview : `${preview}?t=${Date.now()}`} alt="Preview" className="max-h-40 mx-auto rounded" />
              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
                <span className="text-white text-sm">Kliknij aby zmienić</span>
              </div>
