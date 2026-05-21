@@ -124,6 +124,7 @@ export async function POST(request) {
         sunday: 'Niedziela',
         orderOnline: 'ZAMÓW ONLINE',
         orderPyszne: 'Zamów przez pyszne.pl',
+        orderUberEats: 'Zamów przez Uber Eats',
         orderSubtext: 'Szybko i wygodnie',
         contact: 'KONTAKT'
       },
@@ -137,6 +138,7 @@ export async function POST(request) {
         sunday: 'Sunday',
         orderOnline: 'ORDER ONLINE',
         orderPyszne: 'Order via pyszne.pl',
+        orderUberEats: 'Order via Uber Eats',
         orderSubtext: 'Fast and convenient',
         contact: 'CONTACT'
       },

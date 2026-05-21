@@ -192,16 +192,28 @@ function FooterPreview({ content }) {
               </div>
             </div>
 
-            {/* Pyszne.pl */}
+            {/* Pyszne.pl & Uber Eats */}
             <div>
               <h4 className="text-[9px] tracking-[0.2em] text-[var(--accent)] mb-3 font-medium">ZAMÓW ONLINE</h4>
-              <div className="bg-white/5 p-2 rounded-sm border border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-orange-500 rounded-sm flex items-center justify-center text-[9px]">P</div>
-                  <div><p className="text-white/80 text-[10px] font-medium">Zamów przez pyszne.pl</p><p className="text-white/40 text-[8px]">Szybko i wygodnie</p></div>
+              <div className="space-y-2">
+                <div className="bg-white/5 p-2 rounded-sm border border-white/10">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-orange-500 rounded-sm flex items-center justify-center text-[9px] flex-shrink-0">P</div>
+                    <div><p className="text-white/80 text-[10px] font-medium">Zamów przez pyszne.pl</p><p className="text-white/40 text-[8px]">Szybko i wygodnie</p></div>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-white/50 text-[9px]">ZAMÓW ONLINE</span><span className="text-orange-500 text-[9px]">→</span>
+                  </div>
                 </div>
-                <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-white/50 text-[9px]">ZAMÓW ONLINE</span><span className="text-orange-500 text-[9px]">→</span>
+
+                <div className="bg-white/5 p-2 rounded-sm border border-white/10">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-[#06C167] rounded-sm flex items-center justify-center text-[9px] flex-shrink-0 text-white font-bold">U</div>
+                    <div><p className="text-white/80 text-[10px] font-medium">Zamów przez Uber Eats</p><p className="text-white/40 text-[8px]">Szybko i wygodnie</p></div>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-white/50 text-[9px]">ZAMÓW ONLINE</span><span className="text-[#06C167] text-[9px]">→</span>
+                  </div>
                 </div>
               </div>
             </div>

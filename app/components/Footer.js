@@ -104,33 +104,62 @@ export default function Footer({ content }) {
             </div>
           </div>
 
-          {/* Pyszne.pl */}
+          {/* Pyszne.pl & Uber Eats */}
           <div>
             <h4 className="text-sm tracking-[0.2em] text-[var(--accent)] mb-6 font-medium">{t('footer.orderOnline')}</h4>
-            <a 
-              href="https://www.pyszne.pl/en/menu/royal-restaurant-warszawa"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block group"
-            >
-              <div className="bg-white/5 p-4 rounded-sm border border-white/10 group-hover:border-orange-500/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-orange-500 rounded-sm flex items-center justify-center">
-                    <img src="/channels4_profile.webp" alt="Pyszne.pl" className="w-full h-full " />
+            <div className="space-y-4">
+              <a 
+                href="https://www.pyszne.pl/en/menu/royal-restaurant-warszawa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <div className="bg-white/5 p-4 rounded-sm border border-white/10 group-hover:border-orange-500/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-orange-500 rounded-sm flex items-center justify-center">
+                      <img src="/channels4_profile.webp" alt="Pyszne.pl" className="w-full h-full " />
+                    </div>
+                    <div>
+                      <p className="text-white/90 font-medium">{t('footer.orderPyszne')}</p>
+                      <p className="text-white/50 text-xs">{t('footer.orderSubtext')}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-white/90 font-medium">{t('footer.orderPyszne')}</p>
-                    <p className="text-white/50 text-xs">{t('footer.orderSubtext')}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-white/60 text-xs group-hover:text-orange-400 transition-colors">{t('footer.orderOnline')}</span>
+                    <svg className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+                    </svg>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-white/60 text-xs group-hover:text-orange-400 transition-colors">{t('footer.orderOnline')}</span>
-                  <svg className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
-                  </svg>
+              </a>
+
+              <a 
+                href="https://www.ubereats.com/pl-en/store/royal-restaurant/NhxUTfseVmOP6E3QsI3-SQ?srsltid=AfmBOoq8blmCjJToPlg3ZH5ifx9Y3n-YcMM6Py2i6gX249kMCDb-xJT2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <div className="bg-white/5 p-4 rounded-sm border border-white/10 group-hover:border-[#06C167]/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-[#06C167] rounded-sm flex items-center justify-center p-2.5 flex-shrink-0">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="text-white w-full h-full">
+                        <path d="M0 2.75V7.84C0 9.76 1.34 11.03 3.08 11.03C3.93 11.03 4.69 10.7 5.23 10.13V10.89H6.44V2.75H5.22V7.77C5.22 9.06 4.35 9.93 3.22 9.93C2.08 9.93 1.22 9.08 1.22 7.77V2.75H0M7.35 2.75V10.89H8.5V10.14A2.96 2.96 0 0 0 10.63 11.03A3.09 3.09 0 0 0 13.74 7.93A3.09 3.09 0 0 0 10.63 4.83C9.8 4.83 9.06 5.17 8.5 5.71V2.75H7.35M17.26 4.84C15.5 4.84 14.21 6.25 14.21 7.92C14.21 9.69 15.58 11 17.36 11C18.44 11 19.33 10.54 19.92 9.75L19.07 9.12C18.63 9.71 18.05 10 17.36 10C16.36 10 15.56 9.27 15.4 8.31H20.22V7.92C20.22 6.16 18.97 4.84 17.26 4.84M23.45 4.91C22.8 4.91 22.33 5.21 22.04 5.69V4.96H20.87V10.89H22.05V7.5C22.05 6.6 22.61 6 23.37 6H23.86V4.91H23.45M17.23 5.86C18.11 5.86 18.84 6.47 19.04 7.38H15.42C15.63 6.47 16.36 5.86 17.23 5.86M10.55 5.88C11.66 5.88 12.58 6.78 12.58 7.93C12.58 9.07 11.66 10 10.55 10A2.04 2.04 0 0 1 8.5 7.93C8.5 6.78 9.42 5.88 10.55 5.88M0 12.96V21.1H5.72V19.71H1.55V17.69H5.61V16.34H1.55V14.35H5.72V12.96H0M14.56 13.38V15.09H13.4V16.45H14.56V19.65C14.56 20.46 15.13 21.1 16.16 21.1H17.8V19.74H16.66C16.31 19.74 16.09 19.58 16.09 19.26V16.45H17.8V15.09H16.09V13.38H14.56M9.32 14.94C7.53 14.94 6.12 16.34 6.12 18.1C6.12 19.85 7.53 21.25 9.32 21.25C10.04 21.25 10.71 21 11.24 20.56V21.1H12.76V15.09H11.24V15.63A2.96 2.96 0 0 0 9.32 14.94M21.04 14.94C19.45 14.94 18.34 15.59 18.34 16.86C18.34 17.73 18.95 18.3 20.27 18.58L21.72 18.92C22.29 19.03 22.44 19.18 22.44 19.42C22.44 19.79 22 20.03 21.31 20.03C20.44 20.03 19.94 19.83 19.74 19.17H18.21C18.43 20.42 19.36 21.25 21.26 21.25C23 21.25 24 20.42 24 19.26C24 18.44 23.42 17.83 22.19 17.57L20.9 17.3C20.15 17.16 19.91 17 19.91 16.74C19.91 16.38 20.27 16.16 20.94 16.16C21.66 16.16 22.19 16.36 22.34 17H23.86C23.78 15.77 22.87 14.94 21.04 14.94M9.45 16.26C10.46 16.26 11.27 17.07 11.27 18.1S10.46 19.93 9.45 19.93A1.82 1.82 0 0 1 7.62 18.1C7.62 17.07 8.45 16.26 9.45 16.26Z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-white/90 font-medium">{t('footer.orderUberEats')}</p>
+                      <p className="text-white/50 text-xs">{t('footer.orderSubtext')}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-white/60 text-xs group-hover:text-[#06C167] transition-colors">{t('footer.orderOnline')}</span>
+                    <svg className="w-4 h-4 text-[#06C167] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            </div>
           </div>
 
           {/* Contact */}
