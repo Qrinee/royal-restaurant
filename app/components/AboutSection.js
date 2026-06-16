@@ -54,6 +54,7 @@ export default function AboutSection({ content }) {
 }
 
 function AboutImage({ image }) {
+  const { t } = useLanguage()
   return (
     <div className="relative">
       <div className="relative overflow-hidden shadow-2xl">
@@ -75,8 +76,8 @@ function AboutImage({ image }) {
             <span className="text-lg text-[var(--accent)]">★</span>
           </div>
           <div>
-            <p className="text-xs tracking-widest text-[var(--accent)] mb-0.5">TRADYCJA</p>
-            <p className="text-sm font-medium text-[var(--foreground)]">Polskie smaki</p>
+            <p className="text-xs tracking-widest text-[var(--accent)] mb-0.5">{t('about.badgeTitle')}</p>
+            <p className="text-sm font-medium text-[var(--foreground)]">{t('about.badgeSubtitle')}</p>
           </div>
         </div>
       </div>
